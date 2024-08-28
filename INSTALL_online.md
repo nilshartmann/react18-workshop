@@ -13,7 +13,7 @@ Um sicherzustellen, dass der Workspace bei dir funktioniert, möchte ich dich bi
 Auf deinem Computer benötigst Du folgende Software:
 
 - Git (zum klonen und aktualisieren des Workspaces)
-- Node.js (mind. Version 18)
+- Node.js (LTS-Version, das ist zzt. Version 20.x)
 - Einen Node Package Manager (zum Beispiel npm)
 - Browser (am besten Firefox oder Chrome)
 - Eine IDE oder ein Texteditor. Wenn Du bereits einen "Lieblingseditor" verwendest, benutze diesen während des Trainings, damit Du nicht auch noch ein neues Tool lernen musst. Ansonsten funktionieren folgende Tools zum Beispiel:
@@ -31,9 +31,12 @@ Auf deinem Computer benötigst Du folgende Software:
   - Bitte stelle sicher, dass das Installieren von npm-Paketen und das Klonen von Git-Repositories **auch während der Schulung** funktioniert
   - Dazu kontrollieren, dass keine Proxy, VPN- oder Firewall- oder andere Einstellungen den Zugang zu Git und npm verhindern.
   - Informationen zum Einrichten eines Proxies für npm findest Du bei Bedarf [zum Beispiel hier](http://wil.boayue.com/blog/2013/06/14/using-npm-behind-a-proxy/).
-- **Lass während des Trainings deine Kamera an!**. Ich kann sonst nur schwer einschätzen, ob ich euch langweile oder euch vielleicht abgehängt habe. Und wir sind ja nicht im Radio 😉
+
+**Für Online-Trainings**
+
+- **Lass bitte während des Trainings deine Kamera an!**. Ich kann sonst nur schwer einschätzen, ob ich euch langweile oder euch vielleicht abgehängt habe. Und wir sind ja nicht im Radio 😉
   - Dein Mikrofon brauchst Du nur anmachen, wenn Du etwas sagen oder fragen möchtest (was Du natürlich jederzeit darfst!)
-- W-LAN ist bequem, aber gerade bei (langen) Streamings ist ein Kabel-gebundenes Netzwerk stabiler als W-LAN, also im Zweifel lieber das Kabel einstecken (und W-LAN deaktivieren) 😊
+- W-LAN ist bequem, aber gerade bei Streams mit Video und Ton ist ein Kabel-gebundenes Netzwerk stabiler als W-LAN, also im Zweifel lieber das Kabel einstecken 😊
 
 # Installation und Vorbereitung des Workspaces für die Schulung
 
