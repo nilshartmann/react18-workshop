@@ -1,0 +1,21 @@
+{
+  "name": "react18-training",
+  "version": "1.0.0",
+  "description": "Dieses Repository enthält Materialen zu meinen React Trainings.",
+  "scripts": {
+    "start": "http-server . -p 3030 -o 2023-03-06-react-testen-context-graphql.html#/t-context"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nilshartmann/react18-training.git"
+  },
+  "author": "Nils Hartmann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nilshartmann/react18-training/issues"
+  },
+  "homepage": "https://react.schule",
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
+}
