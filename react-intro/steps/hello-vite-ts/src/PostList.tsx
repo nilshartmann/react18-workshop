@@ -1,22 +1,15 @@
-import moment from "moment";
 import { BlogPost } from "./types";
-
-function formattedDate(date: string) {
-  return moment(date).format("DD.MM.YYYY");
-}
+import { formatDate } from "./date-formatter.ts";
 
 type PostListProps = {
   posts: BlogPost[];
-  onAddPost(): void;
 };
-
-export default function PostList({ posts, onAddPost }: PostListProps) {
+export default function PostList({ posts }: PostListProps) {
   return (
-    <>
-      <button onClick={onAddPost}>Add Post</button>
+    <div>
       {posts.map(p => (
         <article key={p.id} className="Container">
-          <p className="Date">{formattedDate(p.date)}</p>
+          <p className="Date">{formatDate(p.date)}</p>
           <h1>{p.title}</h1>
           <p>{p.body}</p>
           {p.tags?.length > 0 && (
@@ -27,6 +20,6 @@ export default function PostList({ posts, onAddPost }: PostListProps) {
           )}
         </article>
       ))}
-    </>
+    </div>
   );
 }
