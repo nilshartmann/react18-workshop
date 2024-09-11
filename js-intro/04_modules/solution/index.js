@@ -18,4 +18,3 @@ console.log(birthday(persons, "Klaus"));
 console.log(birthday(persons, "Susi"));
 console.log(birthday(persons, "Walter"));
 
-console.log(greeter(persons[0]));

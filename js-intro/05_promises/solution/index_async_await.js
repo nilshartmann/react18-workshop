@@ -2,22 +2,19 @@
 
 // loadGreetingFromServer liefert ein Objekt mit einen Gruß für den Namen zurück,
 // oder einen Fehler wenn kein name angegeben wurde.
-//  Diese Funktion ist "fertig", die musst Du nur verwenden.
 //
-// Im Erfolgsfall liefert die Funktion ein Promise zurückgegeben, das zum folgenden
+// Im Erfolgsfall wird ein Promise zurückgegeben, das zum folgenden
 // Objekt aufgelöst wird { phrase: ..., name: ... }
 
 // 1. Vervollständige getGreetingAsString (s.u.)
-// 2. Vervollständige die Aufrufe von getGreetingAsString (s.u.)
+// 2.
 
 function loadGreetingFromServer(name) {
-  // Diese Funktion steht exemplarisch für eine fertige, asynchrone Funktion,
-  // die z.B. von einer Bibliothek zur Verfügung gestellt wird.
-  //
-  // Sie liefert ein Objekt mit einem Gruß für den übergebenen Namen zurück
-  // ("greeting-as-a-service")
-  //
-  // Im echten Leben würde die Funktion zum Beispiel eine HTTP API aufrufen.
+  // Diese Funktion steht exemplarisch für eine asynchrone Funktion,
+  // die z.B. eine Bibliothek zur Verfügung stellt.
+  // In der Regel wirst Du Promises selbst nicht erzeugen müssen,
+  // sondern nur mit Promise-Objekten arbeiten, die Du von einer Funktion
+  // zurückgeliefert bekommst
   return new Promise((resolve, reject) => {
     const timeout = name ? 500 : 250;
 
@@ -33,25 +30,35 @@ function loadGreetingFromServer(name) {
   });
 }
 
-function getGreetingAsString(name) {
+async function getGreetingAsString(name) {
   // Implementiere diese Funktion
   // Die Funktion soll loadGreetingFromServer mit 'name' aufrufen und
   //   - im Erfolgsfall einen String zurückliefern, in dem die Daten des von
   //     loadGreetingFromServer zurückgelieferte Greeting-Objekts enthalten sind
-  //     Das Greeting-Objekt besteht auf 'name' und 'phrase'
   //   - im Fehlerfall einen String zurückliefern mit einer Fehlermeldung
-  //
-  // Du kannst Promise-Ketten oder async/await API verwenden
+  try {
+    const greeting = await loadGreetingFromServer(name);
+    return `${greeting.phrase} ${greeting.name}`;
+  } catch (error) {
+    return `Could not greet ${name}: ${error}`
+  }
 }
 
 // Führe getGreetingAsString aus und gib das Ergebnis auf der Konsole aus
 //   - Im ersten Fall ("Susi") sollte eine Meldung mit dem Gruß erscheinen
 //   - Im zweiten Fall ("null") sollte eine Fehlermeldung erscheinen
 //
-// Zusatz-Aufgabe:
+// Zusatz:
 //  - kannst Du sicherstellen, dass die Ausgabe für Susi *immer* vor der Ausgabe
-//    von "null" auf der Konsole erscheint?
+//    von "null" kommt?
+async function greet() {
+  const greetingForSusi = await getGreetingAsString("Susi");
+  console.log(greetingForSusi);
+  const greetingError = await getGreetingAsString(null);
+  console.log(greetingError);
+}
 
-getGreetingAsString("Susi");
-getGreetingAsString(null);
+greet();
+
+
 

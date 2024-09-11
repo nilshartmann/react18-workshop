@@ -1,12 +1,12 @@
+const assert = require('node:assert').strict;
+
 console.log("Please edit index.js");
 
-const klaus = { name: "Klaus", age: 34 };
-const susi = { name: "Susi" };
-const walter = { name: "Walter", age: 42, city: "Hamburg", street: "Reeperbahn" };
-
-console.log("klaus", klaus);
-console.log("susi", susi);
-console.log("walter", walter);
+const persons = [
+  { name: "Klaus", age: 32 },
+  { name: "Susi", age: 34, city: "Freiburg" },
+  { name: "Walter", age: 45, address: { city: "Freiburg", street: "Mainstreet" } }
+];
 
 function birthday(persons, name) {
   // persons.map sorgt dafür, dass wir ein neues
@@ -26,8 +26,23 @@ function birthday(persons, name) {
   );
 }
 
-const persons = [klaus, susi, walter];
+const res1 = birthday(persons, "Klaus");
+console.log("res1", res1)
+assert.deepStrictEqual(res1[0], {name: "Klaus", age: 33});
+// Person 1 und Person 2 sollen nicht verändert werden
+assert.equal(res1[1], persons[1]);
+assert.equal(res1[2], persons[2]);
 
-console.log(birthday(persons, "Klaus"));
-console.log(birthday(persons, "Susi"));
-console.log(birthday(persons, "Walter"));
+
+const res2 = birthday(persons, "Susi");
+console.log("res2", res2);
+assert.equal(res2[0], persons[0]);
+assert.deepStrictEqual(res2[1], {name: "Susi", age: 35, city: "Freiburg"});
+assert.equal(res2[2], persons[2]);
+
+const res3 = birthday(persons, "Walter");
+console.log("res3", res3);
+assert.equal(res3[0], persons[0]);
+assert.equal(res3[1], persons[1]);
+assert.deepStrictEqual(res3[2], {name: "Walter", age: 46, address: persons[2].address });
+

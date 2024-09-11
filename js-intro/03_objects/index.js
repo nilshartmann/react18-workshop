@@ -1,3 +1,5 @@
+import { strict as assert } from "node:assert";
+
 console.log("Please edit index.js");
 
 // Schreibe eine neue Funktion, 'birthday':
@@ -12,6 +14,9 @@ console.log("Please edit index.js");
 //            sollen die zusätzlichen Properties in der Kopie enthalten sein
 //       - Objekte, deren 'name' nicht mit dem 'name' übereinstimmen, der an 'birthday' übergeben wurde,
 //          sollen unverändert zurückgegeben werden (keine Kopie erzeugen, sondern dasselbe Objekt zurückliefern)
+//       - Um sicherzustellen, dass deine Funktion korrekt funktioniert, kannst Du unten die assert-Aufrufe
+//         aktivieren. Diese stellen auch sicher, dass du die korrekten Objekte kopiert hast (und nicht
+//         versehentlich die bestehenden Objekte veraendert hast)
 //    BEISPIELE:
 // Bei diesen Personen:
 const persons = [
@@ -21,19 +26,53 @@ const persons = [
 ];
 
 // Aufruf:
-// const res1 = birthday(persons, "Klaus");
+//const res1 = birthday(persons, "Klaus");
 // Erwartetes Ergebnis:
-// [
-//   { name: "Klaus", age: 33 },
-//   { name: "Susi", age: 34, city: "Freiburg" },
-//   { name: "Walter", age: 45, address:  { city: "Freiburg", street: "Mainstreet" } }
-// ]
+//[
+//  { name: 'Klaus', age: 33 },
+//  { name: 'Susi', age: 34, city: 'Freiburg' },
+//  {
+//    name: 'Walter',
+//    age: 45,
+//    address: { city: 'Freiburg', street: 'Mainstreet' }
+//  }
+//]
+//assert.deepStrictEqual(res1[0], {name: "Klaus", age: 33});
+//assert.equal(res1[1], persons[1]);
+//assert.equal(res1[2], persons[2]);
 
 // Aufruf:
 // const res2 = birthday(persons, "Susi");
 // Erwartetes Ergebnis:
+//[
+//  { name: 'Klaus', age: 32 },
+//  { name: 'Susi', age: 35, city: 'Freiburg' },
+//  {
+//    name: 'Walter',
+//    age: 45,
+//    address: { city: 'Freiburg', street: 'Mainstreet' }
+//  }
+//]
+//assert.equal(res2[0], persons[0]);
+//assert.deepStrictEqual(res2[1], {name: "Susi", age: 35, city: "Freiburg"});
+//assert.equal(res2[2], persons[2]);
+
+
+// Aufruf:
+const res3 = birthday(persons, "Walter");
+// Erwartetes Ergebnis:
 // [
-//   { name: "Klaus", age: 32 },
-//   { name: "Susi", age: 35, city: "Freiburg" },
-//   { name: "Walter", age: 45, address:  { city: "Freiburg", street: "Mainstreet" } }
-// ]
+//  { name: 'Klaus', age: 32 },
+//    { name: 'Susi', age: 34, city: 'Freiburg' },
+//    {
+//      name: 'Walter',
+//      age: 46,
+//      address: { city: 'Freiburg', street: 'Mainstreet' }
+//    }
+//  ]
+
+//assert.equal(res3[0], persons[0]);
+//assert.equal(res3[1], persons[1]);
+//assert.deepStrictEqual(res3[2], {name: "Walter", age: 46, address: persons[2].address });
+
+

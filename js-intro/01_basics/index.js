@@ -17,4 +17,10 @@ console.log("Please edit index.js");
 //     - Für helloWorld("Susi") sollte "Hallo, Susi" erscheinen
 //     - Für helloWorld(2021) sollte "" erscheinen
 //     - Für helloWorld() sollte "" erscheinen
-//
+// 3. (OPTIONAL, nur wenn Zeit ist): Der 'name'-Parameter kann auch eine Funktion sein
+//     - Zusätzlich zum bisherigen Verhalten: wenn der name-Parameter eine Funktion ist
+//       ruf' die Funktion innerhalb von 'helloWorld' auf. Die Funktion liefert dann den
+//       Namen der Person zurück, die gegrüßt werden soll, z.B:
+//       function getName() { return "Susi"; }
+//       Wenn 'getName' an 'helloWorld' übergeben wird, müsste also wieder `Hallo, Susi` erscheinen
+
