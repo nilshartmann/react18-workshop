@@ -17,6 +17,8 @@ console.log("Please edit index.js");
 //       - Um sicherzustellen, dass deine Funktion korrekt funktioniert, kannst Du unten die assert-Aufrufe
 //         aktivieren. Diese stellen auch sicher, dass du die korrekten Objekte kopiert hast (und nicht
 //         versehentlich die bestehenden Objekte veraendert hast)
+//       - ZUSATZ Aufgabe (OPTIONAL):
+//         Wenn die Liste den übergebenen 'name' nicht enthält, soll die Liste unverändert zurückgegeben werden
 //    BEISPIELE:
 // Bei diesen Personen:
 const persons = [

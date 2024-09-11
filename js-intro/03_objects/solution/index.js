@@ -9,6 +9,14 @@ const persons = [
 ];
 
 function birthday(persons, name) {
+
+
+  //       - ZUSATZ Aufgabe (OPTIONAL):
+  //         Wenn die Liste den übergebenen 'name' nicht enthält, soll die Liste unverändert zurückgegeben werden
+  if (!persons.find(p => p.name === name)) {
+    return persons;
+  }
+
   // persons.map sorgt dafür, dass wir ein neues
   // Array erzeugen (übergebenes persons-Array bleibt unverändert)
 
@@ -46,3 +54,7 @@ assert.equal(res3[0], persons[0]);
 assert.equal(res3[1], persons[1]);
 assert.deepStrictEqual(res3[2], {name: "Walter", age: 46, address: persons[2].address });
 
+// ZUSATZ: GESUCHTE PERSON NICHT VORHANDEN
+const res4 = birthday(persons, "Lothar Matthäus");
+console.log("res4", res4);
+assert.equal(res4, persons);

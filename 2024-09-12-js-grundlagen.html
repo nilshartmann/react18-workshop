@@ -518,21 +518,12 @@ printer(helloWorld);
           </code></pre>
 
           <pre class="fragment"><code class="javascript">
-          // Ein bestehendes Array um neue Einträge erweitern
-          const abc = ["a", "b", "c"];
 
-          abc.push("d", "e"); // ["a", "b", "c", "d", "e"];
-
-          abc[4]; // e
-          abc.length // 5
-          </code></pre>
-
-          <pre class="fragment"><code class="javascript">
-
-          // Ein bestehende Array Kopieren und die Kopie erweitern
+          // Ein bestehendes Array Kopieren und die Kopie erweitern
           const three = [1, 2, 3];
           const five = three.concat(4, 5)
-          // three !== five
+          // three: [1, 2, 3]
+          // five: [1, 2, 3, 4, 5]
 
           </code></pre>
         </section>
@@ -561,6 +552,36 @@ printer(helloWorld);
           // ["APPLE", "ORANGE"]
           </code></pre>
         </section>
+
+        <section data-markdown>
+          <textarea data-template>
+### Arrays
+* Suchen nach Werten
+* ```typescript
+  const persons = [ "Klaus", "Susi" ];
+  const hasSusi = persons.includes("Susi"); // true
+
+  const susi = persons.indexOf("Susi"); // 1
+  const harry = persons.indexOf("Harry"); // -1
+
+  const firstNameWithS = persons.find(p => p.startsWith("S")); // "Susi"
+  const firstNameWithT = persons.find(p => p.startsWith("T")); // undefined
+
+  const s = persons.findIndex(n => n.startsWith("S")); // 1
+  const t = persons.findIndex(p => p.startsWith("T")); // -1
+
+
+  ```
+* Filtern
+* ```typescript
+  const users = [ { name: "Susi", active: true }, { name: "Klaus", active: false }, { name: "Tina", active: true } ]
+  const activeUsers = users.filter(u => u.active === true);
+            // [ { name: "Susi", active: true }, { name: "Tina", active: true } ]
+  ```
+
+          </textarea>
+         </section>
+
 
         <!-- ============================================================================= -->
         <section>
@@ -636,15 +657,15 @@ person.livesIn // undefined
             <b><code>js-intro/02_objects_and_arrays/index.js</code></b
             >. Darin kannst Du auch deinen Code schreiben.
           </p>
+          <p class="fragment">Du kannst die Datei mit Node.js ausführen (node index.js oder aus der IDE)</p>
           <p class="fragment">
-            Du kannst
+            Alternativ kannst
             <b><code>js-intro/02_objects_and_arrays/index.html</code></b> in deinem Browser öffnen.
             Diese Datei führt die <b><code>index.js</code></b
             >-Datei dann aus.
           </p>
           <p class="fragment">
-            Ausgaben auf der Browser-Konsole, nach dem Ändern von <code>index.js</code>, die Seite
-            im Browser neu laden
+            Ausgaben erfolgen auf der Konsole.
           </p>
           <p class="fragment">Bei Fragen oder Problemen, kannst Du dich jederzeit melden</p>
           <p class="fragment">
@@ -1126,15 +1147,15 @@ const olderPersons = persons.map( p => {
             <b><code>js-intro/03_objects/index.js</code></b
             >. Darin kannst Du auch deinen Code schreiben.
           </p>
+          <p class="fragment">Du kannst die Datei mit Node.js ausführen (node index.js oder aus der IDE)</p>
           <p class="fragment">
-            Du kannst
+            Alternativ kannst Du
             <b><code>js-intro/03_objects/index.html</code></b> in deinem Browser öffnen. Diese Datei
             führt die <b><code>index.js</code></b
             >-Datei dann aus.
           </p>
           <p class="fragment">
-            Ausgaben auf der Browser-Konsole, nach dem Ändern von <code>index.js</code>, die Seite
-            im Browser neu laden
+            Ausgaben erfolgen auf der Konsole
           </p>
           <p class="fragment">Bei Fragen oder Problemen, kannst Du dich jederzeit melden</p>
           <p class="fragment">
@@ -1304,15 +1325,16 @@ const olderPersons = persons.map( p => {
             <b><code>js-intro/04_modules/index.js</code></b
             >. Darin kannst Du auch deinen Code schreiben.
           </p>
+          <p class="fragment">Du kannst die Datei mit Node.js ausführen (node index.js oder aus der IDE)</p>
+
           <p class="fragment">
-            Du kannst
+            Alternativ kannst du
             <b><code>js-intro/04_modules/index.html</code></b> in deinem Browser öffnen. Diese Datei
             führt die <b><code>index.js</code></b
             >-Datei dann aus.
           </p>
           <p class="fragment">
-            Ausgaben auf der Browser-Konsole, nach dem Ändern von <code>index.js</code>, die Seite
-            im Browser neu laden
+            Ausgaben Konsole
           </p>
           <p class="fragment">Bei Fragen oder Problemen, kannst Du dich jederzeit melden</p>
           <p class="fragment">
