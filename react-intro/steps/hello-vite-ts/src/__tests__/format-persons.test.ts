@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { formatPersons } from "../format-persons";
+import { formatPersons } from "./format-persons";
 
 const persons = [
   { firstname: "Klaus", age: 32 },
