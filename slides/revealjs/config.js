@@ -21,6 +21,7 @@ Reveal.initialize({
 
   // no slide transitions by default
   transition: "none",
+  controlsTutorial: true,
 
   // i need all space i can get
   width: 1900,
