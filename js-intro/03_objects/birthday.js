@@ -1,6 +1,14 @@
-import { strict as assert } from "node:assert";
+import assert from "node:assert";
+
+// const assert = require('node:assert').strict;
+
 
 console.log("Please edit index.js");
+
+export function increaseAge() {}
+export const DEFAULT_AGE = 18;
+
+export default function greet_1234() {}
 
 // Schreibe eine neue Funktion, 'birthday':
 //    - Diese Funktion soll zwei Parameter bekommen:
@@ -28,7 +36,7 @@ const persons = [
 ];
 
 // Aufruf:
-//const res1 = birthday(persons, "Klaus");
+const res1 = birthday(persons, "Klaus");
 // Erwartetes Ergebnis:
 //[
 //  { name: 'Klaus', age: 33 },

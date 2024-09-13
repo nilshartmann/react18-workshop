@@ -24,3 +24,4 @@ console.log("Please edit index.js");
 //       function getName() { return "Susi"; }
 //       Wenn 'getName' an 'helloWorld' übergeben wird, müsste also wieder `Hallo, Susi` erscheinen
 
+//console.log("faslkdjfaslkdjflkasjdf", "fkafjkasdf", 1, 2, false)

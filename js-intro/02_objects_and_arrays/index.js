@@ -30,7 +30,10 @@ function createPerson(name, age) {
   // Zurückgeben: ein Person-Objekt mit name und age
 }
 
-function printPersons(persons) {
+function printPersons(persons, formatter) {
+
+
+
   // Alle übergebenen Person-Objekt formatiert ausgeben
 }
 

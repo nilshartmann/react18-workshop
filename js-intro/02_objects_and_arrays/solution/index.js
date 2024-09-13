@@ -10,6 +10,20 @@ const susi = createPerson("Susi", 39);
 
 const persons = [klaus, christian, susi];
 
+function sayHello(name) {
+  if (!name) {
+    return null;
+  }
+
+  return "Hello" + name;
+}
+
+sayHello("");
+sayHello(null); // null
+sayHello(0); // null
+sayHello(false); // null
+sayHello(); // null
+
 // oder "inline":
 // const persons = [createPerson("Klaus", 42),createPerson("Christian") ,createPerson("Susi", 39)];
 

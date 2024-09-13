@@ -19,7 +19,7 @@ function helloWorldZusatz(name) {
     name = name();
   }
   if (typeof name !== "string") {
-    return null;
+    return "";
   }
 
   return `Hallo, ${name}`;
