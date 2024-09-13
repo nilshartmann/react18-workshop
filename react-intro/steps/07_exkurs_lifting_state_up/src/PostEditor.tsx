@@ -12,30 +12,6 @@ export default function PostEditorPage() {
 
   const [showPreview, setShowPreview] = useState(false);
 
-  const savePostMutation = useMutation({
-    async mutationFn() {
-      return ky.post("http://localhost:7000/posts", {
-        json: { title, body, tags }
-      });
-    }
-  });
-
-  useEffect(() => {
-    const currentTitle = window.document.title;
-
-    window.document.title = `Post: ${title}`;
-
-    return () => {
-      window.document.title = currentTitle;
-    };
-  }, [title]);
-
-  const handleSave = () => {
-    savePostMutation.mutate();
-  };
-
-  const saveButtonDisabled = !title || !body || savePostMutation.isPending;
-
   return (
     <div>
       <div className={"PageHeader"}>
@@ -58,14 +34,6 @@ export default function PostEditorPage() {
             onTagsChange={setTags}
           />
         )}
-      </div>
-
-      <div className={"PostEditor__buttons"}>
-        <button disabled={saveButtonDisabled} onClick={handleSave}>
-          Save Post
-        </button>
-        {savePostMutation.isSuccess && <p className={"success"}>Post saved.</p>}
-        {savePostMutation.isError && <p className={"error"}>{savePostMutation.error.toString()}</p>}
       </div>
     </div>
   );

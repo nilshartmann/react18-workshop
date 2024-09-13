@@ -6,12 +6,14 @@ const ALL_TAGS = ["React", "TypeScript", "JavaScript"];
 export default function PostEditor() {
   const [title, setTitle] = React.useState("");
   const [body, setBody] = React.useState("");
+  const [tags, setTags] = React.useState<string[]>([]);
 
-  const clearDisabled = !title && !body;
+  const clearDisabled = !title && !body && tags.length === 0;
 
   function clear() {
     setTitle("");
     setBody("");
+    setTags([]);
   }
 
   return (
@@ -30,7 +32,7 @@ export default function PostEditor() {
       </label>
       {body.length === 0 && <p className={"error"}>Please enter a body</p>}
 
-      <TagChooser availableTags={ALL_TAGS} />
+      <TagChooser availableTags={ALL_TAGS} selectedTags={tags} onSelectionChange={setTags} />
 
       <button disabled={clearDisabled} onClick={clear}>
         Clear
