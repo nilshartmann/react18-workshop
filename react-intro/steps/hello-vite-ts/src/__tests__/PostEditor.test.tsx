@@ -4,7 +4,7 @@ import PostEditor from "../PostEditor";
 import { expect, test, vi } from "vitest";
 
 test("renders correctly", () => {
-  const { asFragment } = render(<PostEditor onSavePost={vi.fn()} />);
+  const { asFragment } = render(<PostEditor />);
   expect(asFragment()).toMatchSnapshot();
 
   screen.logTestingPlaygroundURL();

@@ -2,7 +2,6 @@ import { beforeEach, vi } from "vitest";
 import createFetchMock from "vitest-fetch-mock";
 import { expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import App from "../App";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 
 // https://www.npmjs.com/package/vitest-fetch-mock
