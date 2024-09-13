@@ -1,0 +1,96 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renders correctly 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="PostEditor__title"
+    >
+      <h1>
+        PostEditor
+      </h1>
+      <button
+        class="small"
+      >
+        Show Preview
+      </button>
+    </div>
+    <div
+      class="Container"
+    >
+      <div>
+        <h1>
+          Create Post
+        </h1>
+        <label>
+          Title
+          <input
+            value=""
+          />
+        </label>
+        <p
+          class="error"
+        >
+          Please enter a title
+        </p>
+        <label>
+          Body
+          <textarea />
+        </label>
+        <p
+          class="error"
+        >
+          Please enter a body
+        </p>
+        <div>
+          <h2>
+            Tags
+          </h2>
+          <div
+            class="TagChooser__tags"
+          >
+            <label
+              class="Checkbox"
+            >
+              <input
+                type="checkbox"
+              />
+              React
+            </label>
+            <label
+              class="Checkbox"
+            >
+              <input
+                type="checkbox"
+              />
+              TypeScript
+            </label>
+            <label
+              class="Checkbox"
+            >
+              <input
+                type="checkbox"
+              />
+              JavaScript
+            </label>
+          </div>
+        </div>
+        <button
+          disabled=""
+        >
+          Clear
+        </button>
+      </div>
+    </div>
+    <div
+      class="PostEditor__buttons"
+    >
+      <button
+        disabled=""
+      >
+        Save Post
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

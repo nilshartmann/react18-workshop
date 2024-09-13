@@ -12,12 +12,13 @@ export default function PostList({ posts }: PostListProps) {
           <p className="Date">{formatDate(p.date)}</p>
           <h1>{p.title}</h1>
           <p>{p.body}</p>
-          {p.tags?.length > 0 && (
-            <div className="Tags">
-              <b>Tags: </b>
-              {p.tags?.join(", ")}
-            </div>
-          )}
+          <div className="Tags">
+            {p.tags?.map(tag => (
+              <span key={tag} className={"Tag"}>
+                {tag}
+              </span>
+            ))}
+          </div>
         </article>
       ))}
     </div>

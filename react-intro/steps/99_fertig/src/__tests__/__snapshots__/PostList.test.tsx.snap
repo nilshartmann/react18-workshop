@@ -17,6 +17,20 @@ exports[`renders correctly 1`] = `
       <p>
         Lorem ipsum
       </p>
+      <div
+        class="Tags"
+      >
+        <span
+          class="Tag"
+        >
+          Dummy
+        </span>
+        <span
+          class="Tag"
+        >
+          Content
+        </span>
+      </div>
     </article>
     <article
       class="Container"
@@ -32,6 +46,9 @@ exports[`renders correctly 1`] = `
       <p>
         Some more content
       </p>
+      <div
+        class="Tags"
+      />
     </article>
   </div>
 </DocumentFragment>

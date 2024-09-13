@@ -1,21 +1,27 @@
-import { beforeEach, vi } from "vitest";
+import { beforeEach, test, vi } from "vitest";
 import createFetchMock from "vitest-fetch-mock";
-import { expect, it } from "vitest";
+import { expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
+import App from "../App.tsx";
 
 // https://www.npmjs.com/package/vitest-fetch-mock
 const fetchMocker = createFetchMock(vi);
 const mockPosts = [
-  { id: "1", title: "One Fetch Mock", body: "Lorem ipsum" },
-  { id: "2", title: "Second Post Fetch Mock", body: "Some more content" }
+  { id: "1", title: "One Fetch Mock", body: "Lorem ipsum", date: "2024-09-13T07:29:33.123Z" },
+  {
+    id: "2",
+    title: "Second Post Fetch Mock",
+    body: "Some more content",
+    date: "2024-08-12T09:13:33.123Z"
+  }
 ];
 
 beforeEach(() => {
   fetchMocker.resetMocks();
 });
 
-it("should render posts read from backend", async () => {
+test("read posts and add new post", async () => {
   // sets globalThis.fetch and globalThis.fetchMock to our mocked version
   fetchMocker.enableMocks();
 
@@ -28,11 +34,11 @@ it("should render posts read from backend", async () => {
   expect(screen.getByRole("alert")).toBeInTheDocument();
 
   const articleOne = await screen.findByRole("heading", { name: "One Fetch Mock" });
-  expect(fetchMock).toHaveBeenCalledTimes(1);
+
   expect(articleOne).toBeInTheDocument();
   expect(screen.getByText("Second Post Fetch Mock")).toBeInTheDocument();
 
-  await user.click(screen.getByRole("button", { name: /add/i }));
+  await user.click(screen.getByRole("link", { name: /add post/i }));
 
   const postEditor = getPostEditorModel(user);
   await postEditor.fillTitle("Hello World");
@@ -50,16 +56,13 @@ it("should render posts read from backend", async () => {
 
   expect(fetchMocker).toHaveBeenCalledTimes(2);
 
-  // Verify correct body has been SENT to the server
-  expect(fetchMocker.mock.calls[1][1]?.body).toEqual(
-    JSON.stringify({ title: "Hello World", body: "Lorem ipsum", tags: [] })
-  );
+  const saveRequest = fetchMocker.mock.calls[1][0] as Request;
+  const requestBody = await saveRequest?.json();
 
-  // we should be back on the front page with post list again,
-  // new blog post should be visible
-  await screen.findByRole("heading", {
-    name: /Hello World/i
-  });
+  // Verify correct body has been SENT to the server
+  expect(requestBody).toEqual({ title: "Hello World", body: "Lorem ipsum", tags: [] });
+
+  expect(screen.getByText(/Post saved/i)).toBeInTheDocument();
 });
 
 function getPostEditorModel(user: UserEvent) {

@@ -4,12 +4,24 @@
   --color-white: #fffdfc;
   --grey-1: #f5f3f2;
   --grey-2: #ebe7e6;
-  --grey-3: #595756;
+  --grey-3: #64748b;
 }
 * {
   box-sizing: border-box;
-  font-family: Nunito Sans, -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica,
-    helvetica neue, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+  font-family:
+    Nunito Sans,
+    -apple-system,
+    BlinkMacSystemFont,
+    avenir next,
+    avenir,
+    helvetica,
+    helvetica neue,
+    ubuntu,
+    roboto,
+    noto,
+    segoe ui,
+    arial,
+    sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -30,7 +42,7 @@ h3,
 h4,
 h5,
 h6,
-p{
+p {
   color: var(--color-main);
 }
 
@@ -69,7 +81,6 @@ textarea {
   display: flex;
   justify-content: start;
   align-items: center;
-  
 }
 
 .Checkbox > * {
@@ -77,7 +88,7 @@ textarea {
 }
 
 input[type="checkbox"] {
-  width: auto
+  width: auto;
 }
 
 input:hover,
