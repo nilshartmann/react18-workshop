@@ -2,7 +2,9 @@
 //
 // - In späteren Schritten werden wir hier z.B. den Router hinzufügen
 import PostEditor from "./PostEditor.tsx";
+import { createBrowserRouter, Link, Outlet, RouterProvider } from "react-router-dom";
 import React from "react";
+import PostListPage from "./PostListPage.tsx";
 
 // todo:
 //  Erzeuge eine Router-Konfiguration mit createBrowserRouter:
@@ -31,7 +33,21 @@ import React from "react";
 //           (PostListPage dann mit "index: true" kennzeichnen)
 //
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      { element: <PostListPage />, index: true },
+
+      {
+        path: "/editor",
+        element: <PostEditor />
+      }
+    ]
+  }
+]);
+
 function Layout() {
   return (
     <div className={"Layout"}>
@@ -39,13 +55,16 @@ function Layout() {
         <div>
           <h2>React Example Blog App</h2>
         </div>
-        <div>{/* todo: Link-Komponenten rendern */}</div>
+        <div>
+          <Link to={"/"}>Home</Link>
+          <Link to={"/editor"}>Add Post</Link>
+        </div>
       </header>
-      {/** todo: Outlet-Komponente rendern */}
+      <Outlet />
     </div>
   );
 }
 
 export default function App() {
-  return <PostEditor />;
+  return <RouterProvider router={router} />;
 }
