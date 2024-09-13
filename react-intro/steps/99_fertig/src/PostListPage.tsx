@@ -3,12 +3,17 @@ import { useQuery } from "@tanstack/react-query";
 import ky from "ky";
 import LoadingIndicator from "./LoadingIndicator.tsx";
 import PostList from "./PostList.tsx";
+import { useState } from "react";
 
 export default function PostListPage() {
+  const [orderByLikes, setOrderByLikes] = useState(false);
+
   const postListQuery = useQuery({
-    queryKey: ["posts"],
+    queryKey: ["posts", orderByLikes],
     queryFn() {
-      return ky.get<BlogPost[]>("http://localhost:7000/posts").json();
+      return ky
+        .get<BlogPost[]>(`http://localhost:7000/posts${orderByLikes ? "?orderBy=likes" : ""}`)
+        .json();
     }
   });
 
@@ -22,7 +27,12 @@ export default function PostListPage() {
 
   return (
     <div>
-      <h1>Blog Posts</h1>
+      <div className={"PageHeader"}>
+        <h1>Blog Posts</h1>
+        <button className={"small"} onClick={() => setOrderByLikes(!orderByLikes)}>
+          {orderByLikes ? "Newest first" : "Order by Likes"}
+        </button>
+      </div>
       <PostList posts={postListQuery.data} />
     </div>
   );

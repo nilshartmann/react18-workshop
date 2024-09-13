@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import ky from "ky";
+import TagChooser from "./TagChooser.tsx";
 
 const ALL_TAGS = ["React", "TypeScript", "JavaScript"];
 
@@ -37,7 +38,7 @@ export default function CreatePostPage() {
 
   return (
     <div>
-      <div className={"PostEditor__title"}>
+      <div className={"PageHeader"}>
         <h1>PostEditor</h1>
         <button className={"small"} onClick={() => setShowPreview(!showPreview)}>
           Show {showPreview ? "Editor" : "Preview"}
@@ -116,42 +117,6 @@ function PostEditor({
       <button disabled={clearDisabled} onClick={clear}>
         Clear
       </button>
-    </div>
-  );
-}
-
-type TagChooserProps = {
-  availableTags: string[];
-  selectedTags: string[];
-  onSelectionChange: (newSelected: string[]) => void;
-};
-function TagChooser({
-  availableTags,
-  selectedTags,
-  onSelectionChange: onTagClick
-}: TagChooserProps) {
-  function handleSelectTag(tag: string) {
-    const newSelection = selectedTags.includes(tag)
-      ? selectedTags.filter(t => t !== tag)
-      : selectedTags.concat(tag);
-    onTagClick(newSelection);
-  }
-
-  return (
-    <div>
-      <h2>Tags</h2>
-      <div className={"TagChooser__tags"}>
-        {availableTags.map(t => (
-          <label key={t} className="Checkbox">
-            <input
-              type="checkbox"
-              checked={selectedTags.includes(t)}
-              onChange={() => handleSelectTag(t)}
-            />
-            {t}
-          </label>
-        ))}
-      </div>
     </div>
   );
 }
