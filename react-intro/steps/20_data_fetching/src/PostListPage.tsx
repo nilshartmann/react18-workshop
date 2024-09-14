@@ -35,7 +35,8 @@ import { useState } from "react";
 //          export default function App() {
 //            return (
 //              <QueryClientProvider client={queryClient}>
-//                <RouterProvider router={router} />
+//                <PostListPage />
+//                <PostEditor />
 //              </QueryClientProvider>
 //            );
 //          }
@@ -69,26 +70,10 @@ import { useState } from "react";
 //       - Wenn nicht nach Likes sortiert wird, verwende die Default-Sortierung ohne Search-Parameter http://localhost:7000/posts
 //       - Mit dem Button soll es möglich sein, zwischen den beiden Sortierungen ("Standard", "Likes") zu wechseln
 //       - Achtung! Du musst auch den queryKey anpassen
-//       - Als Alternative zum Button kannst du auch einen Search-Parameter in der URL des Frontends setzen bzw. entfernen
-//          - welche Vorteile gegenüber dem State hätte das?
-//          - Wenn du das ausprobieren willst, verwende 'useSearchParams', um die Search-Parameter zu lesen und zu ändern
-//            siehe: https://reactrouter.com/en/main/hooks/use-search-params#usesearchparams
 
 export default function PostListPage() {
   // Zusatzaufgabe: Sortieren nach Likes
   const [orderByLikes, setOrderByLikes] = useState(false);
-
-  // Zustatzaufgabe: Verwenden der Search Parameter in der URL des Frontends,
-  //  um zu "speichern", ob nach Likes sortiert werden soll oder nicht.
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const orderByLikes = Boolean(searchParams.get("order_by"));
-  // const setOrderByLikes = (newOrderByLikes: boolean) => {
-  //   if (newOrderByLikes) {
-  //     setSearchParams({"order_by": "likes"});
-  //   } else {
-  //     setSearchParams();
-  //   }
-  // }
 
   const postListQuery = useQuery({
     queryKey: ["posts", orderByLikes],

@@ -1,7 +1,6 @@
 import { BlogPost } from "./types";
 import PostList from "./PostList.tsx";
 
-
 //   ---------------------------------------------------------------------------------
 //   - ÜBUNG: TANSTACK QUERY ZUM LADEN VON DATEN
 //   ---------------------------------------------------------------------------------
@@ -32,7 +31,8 @@ import PostList from "./PostList.tsx";
 //          export default function App() {
 //            return (
 //              <QueryClientProvider client={queryClient}>
-//                <RouterProvider router={router} />
+//                <PostListPage />
+//                <PostEditor />
 //              </QueryClientProvider>
 //            );
 //          }
@@ -66,10 +66,6 @@ import PostList from "./PostList.tsx";
 //       - Wenn nicht nach Likes sortiert wird, verwende die Default-Sortierung ohne Search-Parameter http://localhost:7000/posts
 //       - Mit dem Button soll es möglich sein, zwischen den beiden Sortierungen ("Standard", "Likes") zu wechseln
 //       - Achtung! Du musst auch den queryKey anpassen
-//       - Als Alternative zum Button kannst du auch einen Search-Parameter in der URL des Frontends setzen bzw. entfernen
-//          - welche Vorteile gegenüber dem State hätte das?
-//          - Wenn du das ausprobieren willst, verwende 'useSearchParams', um die Search-Parameter zu lesen und zu ändern
-//            siehe: https://reactrouter.com/en/main/hooks/use-search-params#usesearchparams
 
 export default function PostListPage() {
   const mockPosts: BlogPost[] = [

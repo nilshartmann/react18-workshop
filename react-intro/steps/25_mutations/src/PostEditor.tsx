@@ -1,43 +1,23 @@
 import React from "react";
 import TagChooser from "./TagChooser.tsx";
 import ky from "ky";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const ALL_TAGS = ["React", "TypeScript", "JavaScript"];
-
-//   ---------------------------------------------------------------------------------
-//   - ÜBUNG: TANSTACK QUERY ZUM LADEN VON DATEN
-//   ---------------------------------------------------------------------------------
-//
-//   - Verwende 'useMutation' von TanStack Query, um den neuen Blog Post auf dem
-//     Server zu speichern
-//
-//   - Füge einen neuen Button hinzu ("Save")
-//   - (optional) Der Button soll disabled sein, solange title und body leer sind (leere Tags sind erlaubt)
-//   - Verwende 'useMutation' um eine Mutation zu erzeugen, mit der der Blog-Post gespeichert werden kann
-//     - Als Optionen musst du nur die mutationFn angegebn
-//       - diese soll einen POST Request auf http://localhost:7000/posts machen
-//       - Dazu kannst du die 'post'-Methode von 'ky' verwenden
-//       - als 'json'-Body musst du ein Objekt übergeben, dass aus 'title', 'body', 'tags' besteht
-//         (also aus dem Inhalt unseres Formulars)
-//   - Führe die Mutation mit 'mutate' aus, wenn auf den Save-Button geklickt wird
-//   - Wenn das Speichern erfolgreich ('success') war, gib einen Hinweis für den Benutzer aus
-//   - Wenn es beim Speichern einen Fehler gab, ('error') war, gib einen allgemeine Fehlermeldung aus
-//       (Du kannst einen Fehler simulieren, in dem du einen Titel speicherst, der kürzer als fünf Zeichen
-//        lang ist)
-//   - Während die Mutation läuft, kannst du den Save-Button disablen
-//      - Zum Simulieren eines langsamen Server-Requests kannst du die URL http://localhost:7000/posts?slow verwenden
 
 export default function PostEditor() {
   const [title, setTitle] = React.useState("");
   const [body, setBody] = React.useState("");
   const [tags, setTags] = React.useState<string[]>([]);
-
+  const queryClient = useQueryClient();
   const savePostMutation = useMutation({
     mutationFn() {
       return ky.post("http://localhost:7000/posts", {
         json: { title, body, tags }
       });
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     }
   });
 

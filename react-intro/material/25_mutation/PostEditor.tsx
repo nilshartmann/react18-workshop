@@ -1,5 +1,7 @@
 import React from "react";
 import TagChooser from "./TagChooser.tsx";
+import ky from "ky";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const ALL_TAGS = ["React", "TypeScript", "JavaScript"];
 
@@ -19,12 +21,18 @@ const ALL_TAGS = ["React", "TypeScript", "JavaScript"];
 //       - als 'json'-Body musst du ein Objekt übergeben, dass aus 'title', 'body', 'tags' besteht
 //         (also aus dem Inhalt unseres Formulars)
 //   - Führe die Mutation mit 'mutate' aus, wenn auf den Save-Button geklickt wird
-//   - Wenn das Speichern erfolgreich ('success') war, gib einen Hinweis für den Benutzer aus
 //   - Wenn es beim Speichern einen Fehler gab, ('error') war, gib einen allgemeine Fehlermeldung aus
 //       (Du kannst einen Fehler simulieren, in dem du einen Titel speicherst, der kürzer als fünf Zeichen
 //        lang ist)
 //   - Während die Mutation läuft, kannst du den Save-Button disablen
 //      - Zum Simulieren eines langsamen Server-Requests kannst du die URL http://localhost:7000/posts?slow verwenden
+//   - Wenn das Speichern erfolgreich ('success') war, gib einen Hinweis für den Benutzer aus
+//   - Wenn das Speichern erfolgreich war, sorge dafür, dass die PostListe automatisch aktualisiert wird:
+//     - hole dir mit 'useQueryClient' das globale TanStack Query QueryClient-Objekt
+//     - füge in der Mutation-Konfiguration die 'onSuccess'-Methode hinzu
+//       - in dieser Methode musst du mit 'queryClient.invalidateQueries' den Cache invalidieren:
+//         - gib dazu bei 'invalidateQueries' ein Objekt mit dem Eintrag 'queryKey' an, das
+//           den Query-Key aus deinem Query in der PostListPage enthält
 
 export default function PostEditor() {
   const [title, setTitle] = React.useState("");

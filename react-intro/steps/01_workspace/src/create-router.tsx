@@ -1,10 +1,4 @@
-// Diese Komponente dient im ersten Schritt nur als "Platzhalter".
-//
-// - In späteren Schritten werden wir hier z.B. den Router hinzufügen
-import PostEditor from "./PostEditor.tsx";
-import { createBrowserRouter, Link, Outlet, RouterProvider } from "react-router-dom";
-import React from "react";
-import PostListPage from "./PostListPage.tsx";
+import { createBrowserRouter } from "react-router-dom";
 
 // todo:
 //  Erzeuge eine Router-Konfiguration mit createBrowserRouter:
@@ -15,7 +9,8 @@ import PostListPage from "./PostListPage.tsx";
 //    - / zeigt auf <PostListPage />
 //      (Die PostListPage-Komponente zeigt in dieser Version eine Liste von Dummy-Posts an)
 //    - /editor zeigt auf <PostEditor />
-//  - Gib unten in der App-Komponente statt des PostEditors den RouterProvider zurück:
+//  - In der App-Komponenten entfernst du die beiden Komponenten <PostEditor /> und <PostListPage />
+//      und trägst dort stattdessen den RouterProvider mit einer Router-Konfiguration ein:
 //      <RouterProvider router={router} />
 //  - Im Browser kannst Du jetzt "localhost:3000/" und "localhost:3000/editor" öffnen
 //
@@ -33,38 +28,18 @@ import PostListPage from "./PostListPage.tsx";
 //           (PostListPage dann mit "index: true" kennzeichnen)
 //
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { element: <PostListPage />, index: true },
+export const router = null;
 
-      {
-        path: "/editor",
-        element: <PostEditor />
-      }
-    ]
-  }
-]);
-
-function Layout() {
+export function Layout() {
   return (
     <div className={"Layout"}>
       <header>
         <div>
           <h2>React Example Blog App</h2>
         </div>
-        <div>
-          <Link to={"/"}>Home</Link>
-          <Link to={"/editor"}>Add Post</Link>
-        </div>
+        <div>{/* todo: Link-Komponenten rendern */}</div>
       </header>
-      <Outlet />
+      {/** todo: Outlet-Komponente rendern */}
     </div>
   );
-}
-
-export default function App() {
-  return <RouterProvider router={router} />;
 }

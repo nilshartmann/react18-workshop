@@ -1,5 +1,7 @@
 import React from "react";
 import TagChooser from "./TagChooser.tsx";
+import ky from "ky";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const ALL_TAGS = ["React", "TypeScript", "JavaScript"];
 
@@ -7,8 +9,24 @@ export default function PostEditor() {
   const [title, setTitle] = React.useState("");
   const [body, setBody] = React.useState("");
   const [tags, setTags] = React.useState<string[]>([]);
+  const queryClient = useQueryClient();
+  const savePostMutation = useMutation({
+    mutationFn() {
+      return ky.post("http://localhost:7000/posts", {
+        json: { title, body, tags }
+      });
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    }
+  });
+
+  const handleSave = () => {
+    savePostMutation.mutate();
+  };
 
   const clearDisabled = !title && !body && tags.length === 0;
+  const saveButtonDisabled = !title || !body || savePostMutation.isPending;
 
   function clear() {
     setTitle("");
@@ -37,6 +55,11 @@ export default function PostEditor() {
       <button disabled={clearDisabled} onClick={clear}>
         Clear
       </button>
+      <button disabled={saveButtonDisabled} onClick={handleSave}>
+        Save Post
+      </button>
+      {savePostMutation.isSuccess && <p className={"success"}>Post saved.</p>}
+      {savePostMutation.isError && <p className={"error"}>{savePostMutation.error.toString()}</p>}
     </div>
   );
 }
