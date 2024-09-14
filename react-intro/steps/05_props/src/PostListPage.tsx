@@ -3,11 +3,22 @@ import PostList from "./PostList.tsx";
 
 //   ---------------------------------------------------------------------------------
 //   - ÜBUNG: TANSTACK QUERY ZUM LADEN VON DATEN
-//   -
-//   - Verwende 'useQuery' von TanStack Query, um die Blog Posts vom Server zu lesen
 //   ---------------------------------------------------------------------------------
 //
-//  - VORBEREITUNG:
+//   ** VORBEREITUNG #1: Starten des Backends **
+//
+//   - Für diese Übungen muss das "Backend" gestartet sein. Der Backend-Prozess stellt eine
+//     einfache REST-API zum lesen und schreiben von Blog-Posts zur Verfügung.
+//     - Starte bitte zunächst das Backend:
+//         - Wechsel in das 'react-intro/backend'-Verzeichnis
+//         - Führe dort "npm install" aus
+//         - Führe dort "npm start" aus.
+//         - Nun sollte das Backend auf Port 7000 laufen
+//         - Du kannst das Backend testen, in dem du "http://localhost:7000/posts" im Browser
+//           (oder per curl oder wget im Terminal) aufrufst.
+//           Dann sollte eine (JSON-)Liste mit Blog-Post-Objekten zurückkommen.
+//
+//   ** VORBEREITUNG #2: Einfügen der QueryClientProvider-Komponente **
 //
 //    - Um mit TanStack Query Queries und Mutations auszuführen, muss deine Anwendung einen "queryClient"
 //      bereitstellen. Das erfolgt mit der QueryClientProvider-Komponenten.
@@ -25,8 +36,9 @@ import PostList from "./PostList.tsx";
 //            );
 //          }
 //
-//  SCHRITTE:
+//  ** SCHRITTE: **
 //
+//  - Verwende 'useQuery' von TanStack Query, um die Blog Posts vom Server zu lesen
 //  - Du musst einen 'queryKey' angeben. Das kann z.B. ["posts"] sein.
 //     - In einer realistischen Anwendung würde der Query-Key ggf. weitere Parameter enhalten,
 //       z.B. eine Such-Reihenfolge
@@ -53,6 +65,10 @@ import PostList from "./PostList.tsx";
 //       - Wenn nicht nach Likes sortiert wird, verwende die Default-Sortierung ohne Search-Parameter http://localhost:7000/posts
 //       - Mit dem Button soll es möglich sein, zwischen den beiden Sortierungen ("Standard", "Likes") zu wechseln
 //       - Achtung! Du musst auch den queryKey anpassen
+//       - Als Alternative zum Button kannst du auch einen Search-Parameter in der URL des Frontends setzen bzw. entfernen
+//          - welche Vorteile gegenüber dem State hätte das?
+//          - Wenn du das ausprobieren willst, verwende 'useSearchParams', um die Search-Parameter zu lesen und zu ändern
+//            siehe: https://reactrouter.com/en/main/hooks/use-search-params#usesearchparams
 
 export default function PostListPage() {
   const mockPosts: BlogPost[] = [

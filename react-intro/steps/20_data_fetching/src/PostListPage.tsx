@@ -9,7 +9,20 @@ import { useState } from "react";
 //   - ÜBUNG: TANSTACK QUERY ZUM LADEN VON DATEN
 //   ---------------------------------------------------------------------------------
 //
-//   ** VORBEREITUNG: **
+//   ** VORBEREITUNG #1: Starten des Backends **
+//
+//   - Für diese Übungen muss das "Backend" gestartet sein. Der Backend-Prozess stellt eine
+//     einfache REST-API zum lesen und schreiben von Blog-Posts zur Verfügung.
+//     - Starte bitte zunächst das Backend:
+//         - Wechsel in das 'react-intro/backend'-Verzeichnis
+//         - Führe dort "npm install" aus
+//         - Führe dort "npm start" aus.
+//         - Nun sollte das Backend auf Port 7000 laufen
+//         - Du kannst das Backend testen, in dem du "http://localhost:7000/posts" im Browser
+//           (oder per curl oder wget im Terminal) aufrufst.
+//           Dann sollte eine (JSON-)Liste mit Blog-Post-Objekten zurückkommen.
+//
+//   ** VORBEREITUNG #2: Einfügen der QueryClientProvider-Komponente **
 //
 //    - Um mit TanStack Query Queries und Mutations auszuführen, muss deine Anwendung einen "queryClient"
 //      bereitstellen. Das erfolgt mit der QueryClientProvider-Komponenten.

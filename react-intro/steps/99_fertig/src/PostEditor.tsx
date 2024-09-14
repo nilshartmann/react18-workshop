@@ -13,7 +13,7 @@ export default function PostEditorPage() {
   const [showPreview, setShowPreview] = useState(false);
 
   const savePostMutation = useMutation({
-    async mutationFn() {
+    mutationFn() {
       return ky.post("http://localhost:7000/posts", {
         json: { title, body, tags }
       });
