@@ -589,6 +589,425 @@ function HelloWorld() {
           </ol>
         </section>
 
+        <section data-markdown>
+          <textarea data-template>
+<!-- .slide: id="t-typescript" -->
+# Teil V
+## React Anwendungen mit TypeScript
+* <!-- .element: class="demo" --> Beispiel: blog-example/steps/5-typescript
+          </textarea>
+        </section>
+
+        <!-- ######################################################  -->
+        <section>
+          <h2>TypeScript</h2>
+          <ol>
+            <li><a href="#/t-typescript-grundlagen">Einführung in TypeScript</a></li>
+            <li><a href="#/t-typescript-react">React mit TypeScript</a></li>
+          </ol>
+        </section>
+
+        <section id="t-typescript-grundlagen">
+          <h2>Einführung: Die Sprache TypeScript</h2>
+          <p class="fragment">
+            <em>TypeScript is a superset of JavaScript that compiles to plain JavaScript </em>(
+            <a href="http://www.typescriptlang.org/" target="_blank"
+              >http://www.typescriptlang.org/</a
+            >)
+          </p>
+          <ul>
+            <li class="fragment">Erweitert JavaScript um ein Typen System</li>
+            <li class="fragment">
+              Jeder gültige JavaScript Code ist auch gültiger TypeScript Code
+            </li>
+            <li class="fragment">
+              Mittels des TypeScript Compilers wird aus TS Code JavaScript Code
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>TypeScript Grundlagen</h3>
+          <p>Typ-Angaben werden hinter einen Bezeichner geschrieben</p>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+  // Variablen können Typ-Informationen bekommen
+  let foo: string;
+  foo = 'yo';
+  // Error: number: This type is incompatible with string
+  foo = 10;
+                 </code></pre>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+  // Funktionen
+  function sayIt(what: string): string {
+    return `Saying: ${what}`;
+  }
+
+  sayIt('Klaus'); // ok
+  sayIt(10); // error
+  </code></pre>
+
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+  // Arrow Funktionen
+  const sayIt = (what: string): string => `Saying: ${what}`;
+
+  sayIt('Moin');
+  sayIt(123); // Error: Argument of type '123' is not assignable
+              // to parameter of type 'string'.
+  </code></pre>
+        </section>
+
+        <section>
+          <h2>Eingebaute Typen</h2>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+  // string
+  let city: string = 'Hamburg';
+
+  // boolean
+  let isDone: boolean = false;
+
+  // number
+  let theAnswer: number = 42;
+
+  // array (note the [])
+  let cities: string[] = ['Hamburg', 'Barcelona'];
+  // alternative:
+  let languages: Array&lt;string> = ['JavaScript', 'TypeScript'];
+
+  // void
+  function log(s: string): void { /* ... */ }
+              </code></pre>
+        </section>
+        <section>
+          <h2>Eingebaute Typen: any und unknown</h2>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+  // any: kann alle Typen aufnehmen, Typ-Prüfung ist ausgeschaltet
+  let theUnknown: any = 'Who cares';
+  theUnknown = 666; // ok
+  theUnknown = true; // ok
+  let a: number = theUnknown; // ok
+  function loadData(): any { return "" // ok }
+  let b:number = loadData(); // ok
+
+              </code></pre>
+        </section>
+        <section>
+          <h2>Eingebaute Typen: any und unknown</h2>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+  // unknown: kann ebefalls alle Typen aufnehmen, erzwingt aber vor der Verwendung Typ-Prüfung
+  function loadData(): unknown { return "" // ok }
+  let b = loadData();
+  b.toUpperCase(); // ERROR
+  if (typeof b === "string") {
+    // b ist jetzt string (typeof ist Laufzeitprüfung!)
+    b.toUpperCase(); // OK
+  }
+              </code></pre>
+        </section>
+        <section>
+          <h2>Typen können abgeleitet (inferred) werden</h2>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+  let city = 'Hamburg'; // city ist ein String
+
+  city = 42;
+  // Fehler: [ts] Type '42' is not assignable to type 'string'.
+  </code></pre>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+  // Explizite Angabe eines Types (parameter)
+  // und abgeleiteter Typ (Return Type der Funktion)
+
+  function sayIt(what: string) {
+    return `Saying: ${what}`;
+  }
+
+  const said: string = sayIt('Hello TypeScript'); // ok
+  const saidItWrong: number = sayIt('Hello TypeScript'); // error!
+
+
+  </code></pre>
+        </section>
+
+        <section>
+          <h2>Type Check ausschalten</h2>
+          <p>
+            Mit <code>@ts-ignore</code> (als Kommentar) kann wird die Überprüfung der nächsten Zeile
+            ausgeschaltet:
+          </p>
+          <pre><code class="typescript line-numbers" contenteditable data-trim>
+  let city:string = "Hamburg";
+
+  city = 20259; // error: [ts] Type '20259' is not assignable to type 'string'.
+
+  // @ts-ignore
+  city = 20259; // ok
+  </code></pre>
+          <p class="fragment">
+            Nützlich in corner cases, die nur schwer mit TypeScript abbildbar sind oder bei
+            Migration
+          </p>
+        </section>
+        <section>
+          <h2>null und undefined</h2>
+          <div class="fragment">
+            <p><code>null</code> muss explizit zugelassen werden <em>(strictNullChecks</em>):</p>
+            <pre><code class="typescript line-numbers" contenteditable data-trim>
+  let city:string = null; //Type 'null' is not assignable to type 'string'.
+
+  let optionalCity:string|null = null; // OK
+              </code></pre>
+          </div>
+          <div class="fragment">
+            <p><code>undefined</code> muss ebenfalls explizit zugelassen werden:</p>
+            <pre><code class="typescript line-numbers" contenteditable data-trim>
+    let city:string = undefined; //Type 'undefined' is not assignable to type 'string'.
+
+    let optionalCity:string|undefined = undefined; // OK
+    let optionalCity:string|undefined|null = null; // OK
+                </code></pre>
+          </div>
+          <div class="fragment">
+            <p>
+              Optionale Parameter können mit ? gekennzeichnet werden (erlauben dann auch
+              <code>undefined</code>)
+            </p>
+            <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+  function greet(name: string, greeting?: string) {
+    console.log(`${greeting || 'Hello'}, {name}`);
+  }
+
+  greet('Susi', 'Moin')// Moin, Susi
+
+  // 2. Parameter ist optional:
+  greet('Klaus'); // Hello, Klaus
+
+  greet('Peter', null); // Argument of type 'null' is not assignable
+                        // to parameter of type 'string | undefined'.
+              </code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h2>Eigene Typen</h2>
+          <p>
+            Mit <code>interface</code> und <code>type</code>können eigene Typen (Objekt-Strukturen)
+            definiert werden:
+          </p>
+
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+  // Komplexer Typ
+  interface Person {
+    name: string; // Pflicht
+    livesIn?: string; // Optional
+  }
+
+  // Alternativ (interface und type fast synonym)
+  type Person = { name: string; livesIn?: string; }
+
+  const susi: Person = { // OK
+    name: 'Klaus',
+    livesIn: 'Hamburg'
+  };
+  const klaus: Person = { // OK (livesIn ist optional)
+    name: 'Klaus'
+  }
+
+  const helmut: Person = {} // Error: Property 'name' is missing
+
+  const lukas: Person = {
+    name: 'Lukas',
+    profession: 'Lokführer'
+  } // Error: 'profession' does not exist in type 'Person'.
+                 </code></pre>
+        </section>
+
+        <section>
+          <h2>Eigene Typen II</h2>
+          <p>Eigene Objekt-Typen können sowohl "Attribute" als auch Funktionen enthalten:</p>
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+            // Komplexer Typ
+            type Person {
+              name: string; // Pflicht
+              greet(greeting: string): string;
+            }
+
+            const p:Person = {
+              name: "Klaus",
+              greet(greeting: string) {
+                return `${greeting}, ${this.name}`
+              }
+            }
+            p.greet("Hello"); // OK
+            p.greet(123); // ERR: Argument of type '123' is not
+                          // assignable to parameter of type 'string'.
+
+            const wrong:Person = {
+              name: "Susi", // OK
+              greet(greeting: number) { return "hello" }
+                // ERR: Type '(greeting: number) => string' is not assignable to
+                //      type '(greeting: string) => string'.
+                //      Types of parameters 'greeting' and 'greeting' are incompatible.
+                //      Type 'string' is not assignable to type 'number'.
+            }
+                           </code></pre>
+        </section>
+        <section>
+          <h2>Union Types</h2>
+          <p>Variablen, Parameter etc. können mehr als einen Typ annehmen:</p>
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+type Person = { name: string };
+type Movie = { title: string };
+
+function printNameOrTitle(obj: Person | Movie) {
+
+  console.log(obj.title); // ERR: Property 'title' does not
+                          // exist on type 'Person | Movie'
+
+  if ("title" in obj) { // Abfrage ist ein "Type Guard"
+    // obj ist Movie hier, title ist definiert
+    console.log(obj.title);
+  } else {
+    // obj ist Person hier: name ist definiert
+    console.log(obj.name);
+  }
+}
+
+printNameOrTitle({name: "Klaus"}); //OK
+printNameOrTitle({title: "Pulp Fiction"}); //OK
+printNameOrTitle({label: "Save"}); // ERR
+
+          </code></pre>
+        </section>
+        <section>
+          <h2>Type Guards</h2>
+          <p>Durch einen Type Guard können Typen "eingeengt" werden</p>
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+type Person = { name: string };
+type Movie = { title: string };
+
+// Wenn diese Funktion true zurueckgibt, nimmt Typescript an,
+// dass das übergebene Argument vom Typ Movie ist
+function isMovie(candidate: any): candidate is Movie {
+  return ("title" in candidate);
+}
+
+function printNameOrTitle(obj: Person | Movie) {
+  if (isMovie(obj)) {
+    // movie
+  }
+}
+
+          </code></pre>
+        </section>
+        <section>
+          <h2>Type Assertions</h2>
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+type Person = { name: string };
+type Movie = { title: string };
+
+// Wenn diese Funktion zurueckkehrt (kein Error geworfen wird) nimmt Typescript an,
+// dass das übergebene Argument vom Typ Movie  ist
+function assertIsMovie(candidate: any): asserts candidate is  Movie {
+  if ("title" in candidate) {
+    return;
+  }
+  throw new Error("Candidate is not a movie!")
+}
+
+function printTitle(hopefullyAMovie: any) {
+  assertPersonIsMovie(hopefullyAMovie)
+  // hopefullyAMovie ist jetzt Movie
+  hopefullyAMovie.title; // OK
+}
+
+          </code></pre>
+        </section>
+        <section>
+          <h2>String Literal Types</h2>
+          <p>Beispiel: String Aufzählungstyp</p>
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+// Beispiel:
+type View = "POST_LIST" | "POST_EDITOR";
+
+const s:View = "POST_LIST"; // OK
+const t:View = "POST_LISTE" // FEHLER
+
+function setView(v: VIEW) {
+    if (v === "POST_LIST") { ... } // ok
+    if (v === "POST_LISTE") { ... } // error: immer false
+}
+
+setView("POST_LIST"); //OK
+setView("POST_LISTE"); // ERROR
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>Typ-sicherheit in useState</h3>
+          <ul>
+            <li>Der Typ von useState wird grundsätzlich von TypeScript automatisch abgeleitet</li>
+            <li>
+              <pre><code class="line-numbers typescript" data-leftpad>
+function PostEdior() {
+  const [title, setTitle] = React.useState("");
+
+  // greeting is string, because initial value is a string
+  setGreeting("huhu"); // OK
+  setGreeting(666); // ERROR (wrong Type)
+  setGreeting(null); // ERROR (wrong Type)
+  console.log(title.toUpperCase()); // OK
+}
+            </code></pre>
+            </li>
+            <li>Du kannst alternativ den Typen auch explizit setzen</li>
+            <li>Das ist in einigen Fällen sogar erforderlich:</li>
+            <li>
+              <ul>
+                <li>Wenn du mehr als einen Typen angeben willst, z.B. null oder string</li>
+                <li>
+                  Wenn du eine Liste oder ein Objekt im Zustand hast, dessen Typ TypeScript nicht
+                  ermitteln kann
+                </li>
+              </ul>
+            </li>
+            <li>
+              <pre><code class="line-numbers typescript" data-leftpad>
+
+function App() {
+  const [error, setError] = React.useState&lt;null|string>(null);
+
+  const [greetings, setGreetings] = React.useState&lt;string[]>([]);
+
+  const [address, setAddress] = React.useState&lt;Address|undefined>();
+
+  // ...
+}
+                            </code></pre>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Übung: Hello, TypeScript!</h2>
+          <h3>
+            <em>Mach dich mit den Grundzügen der Sprache TypeScript vertraut</em>
+          </h3>
+
+          <ol class="x-list">
+            <li>Diese Übung machen wir im TypeScript Playground!</li>
+            <li>
+              Öffne dazu den TypeScript Playground im Browser: https://www.typescriptlang.org/play/
+            </li>
+            <li>
+              Kopiere den Inhalt der Datei <code>material/ts-intro/uebung.ts</code> in den
+              Playground-Editor
+            </li>
+            <li>Darin enthalten sind zahlreiche Compile-Fehler 😱</li>
+            <li>
+              Bitte ergänze die fehlenden Typ-Angaben, Hinweise und Todos findest du in der Datei
+            </li>
+            <li>Mögliche Lösung: <code>material/ts-intro/uebung_loesung.ts</code></li>
+          </ol>
+        </section>
+
         <section id="t3">
           <h1>Teil III</h1>
           <h2>React: Hierarchien und Anwendungen</h2>
@@ -1869,7 +2288,157 @@ export default function App() {
 </textarea
           >
         </section>
+        <section>
+          <h3>Seiteneffekte</h3>
+          <ul>
+            <li>
+              Als <b>Side effect</b> bzw. <b>Seiteneffekt</b> (könnte im deutschen auch mit
+              "Nebenwirkung" übersetzt werden) wird in React Code bezeichnet, der Dinge außerhalb
+              der umschließenden Komponenten-Funktion verändert.
+            </li>
+            <li>
+              Beispiele sind: Manipulation des nativen DOM (z.B. Fenster-Titel setzen), einen Timer
+              starten oder einen Server-Aufruf durchführen
+            </li>
+            <li>Seiteneffekte sind in der <b>Renderphase</b> einer Komponente verboten! 🚨</li>
+          </ul>
+        </section>
 
+        <section>
+          <h3>useEffekt-Hook</h3>
+          <p>
+            <em
+              >Mit useEffekt kann eine Funktion registriert werden, die nach dem Rendern der
+              Komponente ausgeführt wird</em
+            >
+          </p>
+          <p>
+            Diese <b>Effekt-Callback</b>-Funktion wird beim <em>commit</em> der Komponente
+            ausgeführt
+          </p>
+
+          <div>
+            <pre><code class="javascript"  >
+            function App(props) {
+              React.useEffect(
+                () => console.log("I will run on EACH commit")
+              );
+            }
+          </code></pre>
+          </div>
+          <div>
+            2. Parameter (leeres Array) gibt an, dass die Funktion nur einmal ausgeführt werden soll
+            <pre><code class="javascript"  >
+              function App(props) {
+                React.useEffect(
+                  () => console.log("I will run only on 1st commit"),
+                  []
+                );
+              }
+            </code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h3>useEffect Hook</h3>
+
+          <p>Zwei Parameter:</p>
+          <ol>
+            <li>
+              Callback-Funktion, die aufgerufen wenn entsprechendes Ereignis eintritt (z.B.
+              initiales Rendern abgeschlossen)
+            </li>
+            <li>
+              Ein Array mit Abhängigkeiten:
+              <ul>
+                <li>
+                  Wenn kein Array angegeben wird, wird der Effekt nach jedem Rendern ausgeführt
+                  (achtung! Endlosschleife möglich)
+                </li>
+                <li>
+                  Wenn ein leeres Array angegeben wird, wird der Effekt nur nach dem 1. Rendern
+                  ausgeführt
+                </li>
+                <li>
+                  Wenn Werte angegeben werden, wird der Effekt ausgeführt, wenn sich mind 1 Wert
+                  verändert hat
+                </li>
+                <li>
+                  <b>Wichtig!</b> <em>Alle</em> Werte im Dependency-Array angeben, die darin
+                  verwendet werden (Werte aus Props, State, ...)
+                </li>
+              </ul>
+            </li>
+          </ol>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+### useEffect Hook: Clean-up Funktion
+
+* Um auf das Entfernen der Komponente aus dem DOM zu reagieren (z.B Resourcen
+freigeben), kann die Callback-Funktion als Rückgabe eine "Clean-Up"-Funktion zurückliefern:
+  * ```javascript
+    function HelloEffect() {
+      React.useEffect(
+        () => {
+          console.log("Ich bin gemounted worden");
+          return () => console.log("Ich bin entfernt worden")
+        },
+        [])
+      );
+    }
+  ```
+* Die Clean-Up-Funktion wird immer ausgeführt, wenn die Komponente aus dem DOM entfernt wird
+              und bevor der Effekt erneut ausgeführt wird.
+* Mit der Clean-up-Funktion kann also immer die letzte Ausführung des Effekt-Callbacks "aufgeräumt" werden
+  * ```javascript
+    function PostEditor() {
+      const [title, setTitle] = useState("");
+
+      React.useEffect(
+        () => {
+          let currentTitle = title;
+          console.log("Title: ", currentTitle);
+          return () => console.log("Title war beim Commit:", currentTitle)
+        },
+        [ title ])
+      );
+    }
+    ```
+
+</textarea
+          >
+        </section>
+
+        <section>
+          <h3>Beispiel: Aktualisieren des Browsertitels</h3>
+
+          <div>
+            <p>Der eingegebene Post-Titel soll auch in der Titelzeile des Browsers erscheinen.</p>
+            <pre><code class="javascript"  >
+                function PostEditor() {
+                  const [title, setTitle] = React.useState("");
+                  const [body, setBody] = React.useState("");
+
+                  React.useEffect(() => {
+                    // Aktuellen Titel merken
+                    const currentTitle = window.document.title;
+                    window.document.title = `New Post ${title}`;
+
+                    // Nach dem Unmount bzw. erneuten Ausführung des Effekts
+                    // Titel wieder auf ursprünglichen Wert zurücksetzen
+                    return () => window.document.title = currentTitle;
+
+
+                  }, [title]);
+
+                  return <div>...</div>
+
+                }
+
+                </code></pre>
+          </div>
+        </section>
         <section>
           <h2>Geschafft! 😊</h2>
           <h3>Vielen Dank für Eure Teilnahme!</h3>
@@ -1884,13 +2453,13 @@ export default function App() {
             Twitter: <a href="https://twitter.com/nilshartmann" target="_blank">@nilshartmann</a>
           </p>
         </section>
+
+        <script src="slides/revealjs/reveal.js/dist/reveal.js"></script>
+        <script src="slides/revealjs/reveal.js/plugin/notes/notes.js"></script>
+        <script src="slides/revealjs/reveal.js/plugin/markdown/markdown.js"></script>
+        <script src="slides/revealjs/reveal.js/plugin/highlight/highlight.js"></script>
+        <script src="slides/revealjs/config.js"></script>
       </div>
     </div>
-
-    <script src="slides/revealjs/reveal.js/dist/reveal.js"></script>
-    <script src="slides/revealjs/reveal.js/plugin/notes/notes.js"></script>
-    <script src="slides/revealjs/reveal.js/plugin/markdown/markdown.js"></script>
-    <script src="slides/revealjs/reveal.js/plugin/highlight/highlight.js"></script>
-    <script src="slides/revealjs/config.js"></script>
   </body>
 </html>
