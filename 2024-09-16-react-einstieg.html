@@ -437,35 +437,39 @@ function HelloWorld() {
           </ul>
         </section>
 
-        <!-- <section>
-          <h2>Übung 1b: Styling für den Post-Editor</h2>
-          <em><b>Füge dem Post-Editor etwas CSS hinzu</b></em>
+        <section data-markdown="">
+          <textarea data-template>
+### useState: Komplexer Zustand
+* Ihr könnt in einer Komponente mehrere useState-Aufrufe machen
+* Dann könnt ihr die einzelnen Zustände getrennt aktualisieren
+* Wenn ihr "komplexen" Zustand habt, könnt ihr natürlich auch Objekte und Listen in einen Zustand aufnehmen
+* ```typescript
+  const [address, setAddress] = useState({ street: "Hauptstraße", city: "Nürnberg" });
+  ```
+* Dann aber bitte daran denken, dass der **Zustand immutable** ist.
+* Das bedeutet, wenn ihr den Zustand ändert, müsst ihr das Objekt/die Liste kopieren und dann die Kopie aktualisieren:
+* ```typescript
+  const onStreetChange = (newStreet) => {
+    setAddress(
+      // kopieren, bzw. alten Zustand hier einfügen
+      ...address,
+      // neue Straße setzen:
+      street: newStreet
+    );
+  }
+  ```
+* Achtung! Der Spread-Operator macht eine flache Kopie. Bei Unterobjekten etc. müsst ihr entsprechend mehr Kopieren.
+* Eine große Hilfe bei komplexen Zustand ist die Bibliothek [Immer](https://immerjs.github.io/immer/)
+---
+### Ausblick: useReducer als Alternative zu useState
+* Mit [useReducer](https://react.dev/reference/react/useReducer) könnt ihr die Verwaltung des Zustands von der Komponente trennen.
+* Damit implementiert ihr eine "Reducer-Funktion", die React aufruft, wenn sich der Zustand ändern soll
+* React übergibt euch dann den aktuellen Zustand, sowie eine "Action", die beschreibt, was gerade passiert ist
+  (z.B. Texteingabe erfolgt)
+* In der Reducer-Funktion könnt ihr dann abhängig vom bisherigen Zustand und der Action den neuen Zustand ermitteln
+  </textarea
+          >
         </section>
-        <section>
-          <h3>Schritte</h3>
-          <ol class="x-list">
-            <li>
-              Das Root-Element deines Formulars soll die CSS Klasse <code>Container</code> bekommen.
-              Dadurch sollte sich ihr Aussehen (leicht) verändern
-            </li>
-            <li>
-              Wenn <b>kein Text</b> im Eingabe-Feld steht, soll eine Fehlermeldung ausgegeben werden
-              ("Please fill in the title" o.ä.)
-              <br />
-              Der Fehlertext sollte in fettem Rot ausgegeben werden (CSS-Eigenschaften:
-              <code>color: red</code> und <code>font-weight: bold</code>)
-            </li>
-            <li>
-              Wenn <b>mindestens ein Zeichen</b> im Eingabe-Feld steht, soll eine "positive" Message
-              erscheinen ("You have filled the title correctly").
-              <br />
-              Diese positive Nachricht sollte in grün erscheinen (CSS-Eigenschaft:
-              <code>color: green</code>)
-            </li>
-            <li>Mögliche Lösung in <code>steps/1b-editor-css</code></li>
-            <li>Wenn Du fertig bist, bitte "Hand heben" in Zoom 🙋‍♀️</li>
-          </ol>
-        </section> -->
 
         <section>
           <h3>React Hooks API</h3>
@@ -482,10 +486,12 @@ function HelloWorld() {
         </section>
         <section>
           <h3>React Hooks API</h3>
-          <em>Es gibt einige Regeln zu beachten, bei der Verwendung von Hooks 👆</em>
+          <em
+            >Bei der Verwendung von Hooks gibt es einige Regeln ("Rules of Hooks") zu beachten ️</em
+          >👮‍♀️
           <p style="font-size: 75%; margin-top: 0">
-            <a href="https://reactjs.org/docs/hooks-rules.html"
-              >(https://reactjs.org/docs/hooks-rules.html)</a
+            <a href="https://react.dev/reference/rules/rules-of-hooks"
+              >(https://react.dev/reference/rules/rules-of-hooks)</a
             >
           </p>
           <div>
@@ -631,26 +637,29 @@ function PostEditor() {
                </code></pre>
             </li>
             <li>
-              ...alle angegebenen Properties werden "gesammelt" und in <b>einem</b> Objekt im 1.
-              Methoden-Parameter an Komponente übergeben
+              ...alle angegebenen Properties werden von React "gesammelt" und in
+              <b>einem Objekt</b> an die Komponente übergeben
             </li>
+            <li>Das Objekt ist immer das <b>erste Funktionsargument</b> einer Komponente</li>
             <li>
               <pre><code class="javascript"  >
 function TagChooser(props) {
-    // props: { title: "Select tags for your post", availableTags: ["JS", "Web Development" ] }
+    // props:
+    //  {
+    //     title: "Select tags for your post",
+    //     availableTags: ["JS", "Web Development" ]
+    // }
 
     return ...;
-  }
 }
               </code></pre>
             </li>
             <li>
               <pre><code class="javascript"  >
 // Mit Destructuring
-function PostEditor({title, availableTags}) {
+function PostEditor( {title, availableTags} ) {
 
     return ...;
-  }
 }
                                 </code></pre>
             </li>
@@ -720,11 +729,11 @@ function TagChooser({title = "Select Tag", availableTags}: TagChooserProps) {
           </code></pre>
         </section>
 
-        <section>
-          <h3>Virtual DOM</h3>
-          <p>"Rendern" hat leider doppelte Bedeutung!</p>
-          <img src="slides/images/vdom.png" style="height: 650px" />
-        </section>
+        <!--        <section>-->
+        <!--          <h3>Virtual DOM</h3>-->
+        <!--          <p>"Rendern" hat leider doppelte Bedeutung!</p>-->
+        <!--          <img src="slides/images/vdom.png" style="height: 650px" />-->
+        <!--        </section>-->
         <!--        <section>-->
         <!--          <h3>Virtual DOM</h3>-->
         <!--          <p>Beispiel: <code>react-intro/steps/2b-rendering</code></p>-->
@@ -987,13 +996,6 @@ function TagChooser({title = "Select Tag", availableTags}: TagChooserProps) {
 * <img src="slides/images/lifting-state-up.png" height="500px"/>
 
           </textarea>
-        </section>
-        <section data-markdown="">
-          <textarea data-template>
-    <!-- .element: class="todo" -->Objekt als State
-    <!-- .element: class="todo" -->useReducer
-  </textarea
-          >
         </section>
 
         <section id="t-server">
