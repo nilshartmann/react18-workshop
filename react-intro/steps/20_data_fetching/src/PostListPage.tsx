@@ -1,13 +1,15 @@
 import { BlogPost } from "./types";
+import { useQuery } from "@tanstack/react-query";
+import ky from "ky";
+import LoadingIndicator from "./LoadingIndicator.tsx";
 import PostList from "./PostList.tsx";
+import { useState } from "react";
 
 //   ---------------------------------------------------------------------------------
 //   - ÜBUNG: TANSTACK QUERY ZUM LADEN VON DATEN
-//   -
-//   - Verwende 'useQuery' von TanStack Query, um die Blog Posts vom Server zu lesen
 //   ---------------------------------------------------------------------------------
 //
-//  - VORBEREITUNG:
+//   ** VORBEREITUNG: **
 //
 //    - Um mit TanStack Query Queries und Mutations auszuführen, muss deine Anwendung einen "queryClient"
 //      bereitstellen. Das erfolgt mit der QueryClientProvider-Komponenten.
@@ -25,8 +27,9 @@ import PostList from "./PostList.tsx";
 //            );
 //          }
 //
-//  SCHRITTE:
+//  ** SCHRITTE: **
 //
+//  - Verwende 'useQuery' von TanStack Query, um die Blog Posts vom Server zu lesen
 //  - Du musst einen 'queryKey' angeben. Das kann z.B. ["posts"] sein.
 //     - In einer realistischen Anwendung würde der Query-Key ggf. weitere Parameter enhalten,
 //       z.B. eine Such-Reihenfolge
@@ -53,29 +56,57 @@ import PostList from "./PostList.tsx";
 //       - Wenn nicht nach Likes sortiert wird, verwende die Default-Sortierung ohne Search-Parameter http://localhost:7000/posts
 //       - Mit dem Button soll es möglich sein, zwischen den beiden Sortierungen ("Standard", "Likes") zu wechseln
 //       - Achtung! Du musst auch den queryKey anpassen
+//       - Als Alternative zum Button kannst du auch einen Search-Parameter in der URL des Frontends setzen bzw. entfernen
+//          - welche Vorteile gegenüber dem State hätte das?
+//          - Wenn du das ausprobieren willst, verwende 'useSearchParams', um die Search-Parameter zu lesen und zu ändern
+//            siehe: https://reactrouter.com/en/main/hooks/use-search-params#usesearchparams
 
 export default function PostListPage() {
-  const mockPosts: BlogPost[] = [
-    {
-      id: "1",
-      title: "One Fetch Mock",
-      body: "Lorem ipsum",
-      date: "2024-09-13T07:29:33.123Z",
-      tags: ["Mock"]
-    },
-    {
-      id: "2",
-      title: "Second Post Fetch Mock",
-      body: "Some more content",
-      date: "2024-08-12T09:13:33.123Z",
-      tags: ["Mock", "UI"]
+  // Zusatzaufgabe: Sortieren nach Likes
+  const [orderByLikes, setOrderByLikes] = useState(false);
+
+  // Zustatzaufgabe: Verwenden der Search Parameter in der URL des Frontends,
+  //  um zu "speichern", ob nach Likes sortiert werden soll oder nicht.
+  // const [searchParams, setSearchParams] = useSearchParams();
+  // const orderByLikes = Boolean(searchParams.get("order_by"));
+  // const setOrderByLikes = (newOrderByLikes: boolean) => {
+  //   if (newOrderByLikes) {
+  //     setSearchParams({"order_by": "likes"});
+  //   } else {
+  //     setSearchParams();
+  //   }
+  // }
+
+  const postListQuery = useQuery({
+    queryKey: ["posts", orderByLikes],
+    // ohne Sortieren nach Likes:
+    // queryKey: ["posts"],
+    queryFn() {
+      // URL ohne Sortieren der Likes: http://localhost:7000/posts
+      return ky
+        .get<BlogPost[]>(`http://localhost:7000/posts${orderByLikes ? "?orderBy=likes" : ""}`)
+        .json();
     }
-  ];
+  });
+
+  if (postListQuery.isPending) {
+    return <LoadingIndicator>Posts loading...</LoadingIndicator>;
+  }
+
+  if (postListQuery.isError) {
+    return <h1>Loading failed 😢</h1>;
+  }
 
   return (
     <div>
-      <h1>Blog Posts</h1>
-      <PostList posts={mockPosts} />
+      <div className={"PageHeader"}>
+        <h1>Blog Posts</h1>
+        {/* ZUSATZ AUFGABE: Sortieren nach Likes */}
+        <button className={"small"} onClick={() => setOrderByLikes(!orderByLikes)}>
+          {orderByLikes ? "Newest first" : "Order by Likes"}
+        </button>
+      </div>
+      <PostList posts={postListQuery.data} />
     </div>
   );
 }
