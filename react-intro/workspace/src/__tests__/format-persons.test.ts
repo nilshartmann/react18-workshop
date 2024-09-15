@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { formatPersons } from "../format-persons";
+import { formatPersons } from "./format-persons";
 
 const persons = [
   { firstname: "Klaus", age: 32 },
@@ -7,6 +7,14 @@ const persons = [
 ];
 
 test("format persons", () => {
+  // todo:
+  //
+  //  - Schreibe einen Test für die 'formatPersons'-Funktion
+  //    - Erzeuge eine Mock-Funktion für den "formatter"
+  //    - Rufe 'formatPersons' mit dem 'persons'-Array (siehe oben) auf
+  //    - Stelle sicher, dass der "Formatter"-Mock einmal mit
+  //         "Klaus" und einmal mit "Susi" aufgerufen wurde
+
   const mockFormatter = vi.fn();
 
   formatPersons(persons, mockFormatter);
