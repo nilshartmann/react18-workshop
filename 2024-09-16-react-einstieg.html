@@ -1444,10 +1444,16 @@ function TagChooser({title = "Select Tag", availableTags}: TagChooserProps) {
         </section>
         <section data-markdown="">
           <textarea data-template>
-<!-- .slide: id="#/t5-data-fetching" -->
+<!-- .slide: id="t5-data-fetching" -->
 # Teil 5
 ## Data Fetching
 * *Lesen und Schreiben von Daten von einem Backend (REST/HTTP)*
+---
+## Data Fetching
+* React macht keine bzw. nur sehr wenig Angaben, wie mit serverseitigen Daten gearbeitet wird
+* Ihr müsst euch in der Regel entscheiden:
+  * wie ihr HTTP Request technisch durchführt
+  * ob/welche Bibliothek zum Data Fetching ihr benutzt (z.B. für Caching, Validierung etc.)
 ---
 ## Data Fetching
 * Themen
@@ -1513,14 +1519,9 @@ function TagChooser({title = "Select Tag", availableTags}: TagChooserProps) {
 * Die Methoden haben jeweils zwei Parameter:
   1. Die Methoden erwarten die URL, die ihr aufrufen wollt
   2. (optional) Ein Objekt mit weiteren Einstellungen für einen Request, z.B. der Payload
-* Die Funktionen liefern jeweils ein Promise mit einem `Response`-Objekt zurück
-  * Dabei handelt es sich um eine Erweiterung des standardisierten [Response-Objektes des Browsers](https://developer.mozilla.org/en-US/docs/Web/API/Response).
-  * In ky gibt es darauf noch Hilfsmethoden, die es vereinfachen mit dem Payload der Antwort zu arbeiten
-* Als Typ-Argument kann jeweils der erwartete Rückgabe-Typ in TypeScript definiert werden
-  * Achtung! Nur Build-Zeit-Prüfung, zur Laufzeit findet keine Prüfung statt, ob die Antwort vom Server dem angegebenen
-    Typen entspricht.
 
 * ```typescript
+  import ky from "ky";
   // HTTP GET Request
   const blogPosts = await ky
           .get<BlogPost[]>(`http://localhost:7000/posts`)
@@ -1534,6 +1535,58 @@ function TagChooser({title = "Select Tag", availableTags}: TagChooserProps) {
   // ...
   });
   ```
+---
+### Daten lesen mit ky
+* Die Funktionen auf dem `ky`-Objekt liefern jeweils ein Promise mit einem `Response`-Objekt zurück
+  * Dabei handelt es sich um eine Erweiterung des standardisierten [Response-Objektes des Browsers](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+  * In ky gibt es darauf noch Hilfsmethoden, die es vereinfachen mit dem Payload der Antwort zu arbeiten
+* Mit `json` könnt ihr den Payload auslesen und in JavaScript-Objekte verwandeln
+  * Der Payload muss dazu natürlich im JSON-Format vorliegen
+* Als Typ-Argument muss der erwartete Rückgabe-Typ in TypeScript angegeben werden
+* ```typescript
+  import ky from "ky";
+
+  async function loadBlogPosts() {
+    const blogPosts = await ky
+          .get<BlogPost[]>(`http://localhost:7000/posts`)
+          .json();
+    return blogPosts; // blogPosts ist vom Typ BlogPost[]
+  // ...
+  ```
+* Wenn ihr keinen TypeScript-Typen angebt, ist der Typ `unknown`
+* Achtung! Zur Laufzeit findet keine Prüfung statt, ob die Antwort vom Server dem angegebenen
+    Typen tatsächlich entspricht.
+* Für Laufzeit-Prüfungen bietet sich z.B. die Bibliothek [zod](https://zod.dev) an
+  * Die können wir uns später ansehen.
+---
+### Daten schreiben mit ky
+* Um Daten zu schreiben, verwendet ihr die HTTP Methoden POST, PATCH, PUT oder DELETE
+* Auch dafür gibt es jeweils eigene Funktionen auf dem `ky`-Objekt
+* Üblicherweise gebt ihr dabei als zweiten Parameter ein Objekt mit [Konfigurationsoptionen](https://github.com/sindresorhus/ky?tab=readme-ov-file#options) an
+* ```typescript
+  const responsePromise = ky.post<NewBlogPost>("http://localhost:7000/posts", {
+    // Optionen für Payload, HTTP Header etc.
+  }).json();
+  ```
+* Mit dem Konfigurationsobjekt könnt ihr z.B. angeben, welche HTTP-Header ihr bei einem Request mitschicken wollt
+* Und ihr könnt den Payload festlegen.
+* Um JavaScript-Objekte im JSON-Format zu übertragen, verwendet ihr die `json`-Eigenschaft
+  * Das übergebene Objekt wird automatisch ins JSON-Format umgewandelt
+  * Außerdem wird der HTTP Header `content-type: application/json` gesetzt
+* Genau wie bei `ky.get` könnt ihr dann auf die Response zugreifen (z.B. mit `json()`)
+* Den Typ der Response gebt ihr ebenfalls als Typ-Parameter an (wie bei `ky.get`)
+* ```typescript
+  async function saveBlogPost(postTitle: string, postBody: string) {
+    const result = await
+            ky.post<NewBlogPost>(
+              "http://localhost:7000/posts", {
+                json: { title: postTitle, body: postBody }
+              }
+            ).json();
+      // result ist NewBlogPost
+    }
+  ```
+
   </textarea
           >
         </section>
