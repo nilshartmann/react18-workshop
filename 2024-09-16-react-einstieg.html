@@ -128,6 +128,7 @@
 * Ausblick
   * [Seiteneffekte mit useEffect](#/seiteneffekte)
   * [Validieren von Daten mit zod](#/t-zod)
+  * [Data Fetching mit React Suspense](#/t-suspense)
 * Wenn ihr weitere Themen und Wünsche habt, jederzeit gerne. Einfach Bescheid sagen!
 
 
@@ -2662,6 +2663,167 @@ freigeben), kann die Callback-Funktion als Rückgabe eine "Clean-Up"-Funktion zu
 * Mehr Hinweise findest du direkt in `types.ts`
 * Mögliche Lösung: `60_zod`
 
+---
+<!-- .slide: id="t-suspense" -->
+# Suspense
+---
+## Suspense
+
+* Suspense ist ein relativ neuer Mechanismus in React, um das Arbeiten mit asynchronem Code (insb. Data Fetching) zu vereinfachen
+* Suspense unterbricht das Rendern, wenn eine Komponente wegen noch fehlender Daten nicht gerendert werden kann
+  * Daten können "normale" Daten sein, die z.B. mit TanStack Query geladen werden
+  * ...oder Source-Code, der mit Lazy Loading erst bei Bedarf nachgeladen wird
+---
+### Suspense für Lazy-Loading
+* Suspense für Lazy-Loading/Code Splitting gibt es schon länger als stabiles Feature in React
+* Bei Lazy Loading wird der Code für eine Komponente erst geladen, wenn er benötigt wird
+* ```typescript
+  import { lazy } from 'react';
+
+
+  const PostEditor = lazy(() => import('./PostEditor'));
+  ```
+* Der Source-Code für `PostEditor` wird vom Browser erst geladen, wenn die Komponente benötigt bzw. verwendet wird
+* Während der Source-Code geladen wird, muss React einen Platzhalter anzeigen
+* Dazu kann um eine Komponente die `Suspense`-Komponente von React gelegt werden
+* ```typescript
+  const PostEditor = lazy(() => import('./PostEditor'));
+
+  function PostEditorPage() {
+    // ...
+
+    return  <React.Suspense> fallback={"Please wait"}>
+      <PostEditor />
+    </React.Suspense>;
+  }
+  ```
+* Hier würde React zunächst die `fallback`-Komponente (`Please wait`) rendern und darstellen, bis der Source-Code für `PostEditor` geladen wurde
+* Danach rendert React die Komponente (`PostEditorPage`) erneut und kann nun den `PostEditor` darstellen.
+
+---
+### Suspense für Daten ("Suspense for Data Fetching")
+* Um Suspense mit fetch o.ä. zu verwenden, muss die eingesetzte Bibliothek Suspense unterstützen
+  * Das können wir in unserem eigenen Code nicht machen
+  * TanStack Query, React Router und der Apollo GraphQL Client unterstützen Suspense in ihren neusten Versionen
+---
+### Suspense mit TanStack Query
+
+* Die Verwendung mit TanStack Query ist denkbar einfach: ihr verwendet den `useSuspenseQuery`-Hook statt des `useQuery`-Hooks
+* Die Parameter sind dieselben
+* Aber: der Query liefert erst ein Ergebnis, wenn die Daten geladen worden sind (oder im Cache vorhanden sind)
+  * Für die Dauer der Ladezeit muss `Suspense` verwendet werden, um eine Platzhalter-Komponente zu rendern
+  * Für den Fall eines Fehlers muss eine [Error-Boundary-Komponente](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary) gesetzt werden
+    * Das ist eine Art try-catch-Mechanismus, mit dem eine React-Anwendung auf Fehler _während des Renderns_ reagieren kann
+
+* ```typescript
+  function Post({postId}) {
+    // hier wird das Rendern von React unterbrochen, bis die Daten da sind:
+    const data = useSuspenseQuery({queryFn: fetch(/*...*/), queryKey: ["post", postId] });
+    // wenn die Anwendung hierher kommt, sind die Daten in jedem Fall vorhanden
+    return ...;
+  }
+
+  function PostPage() {
+    return (
+      <ErrorBoundary fallback={<h1>Loading failed!</h1>}>
+        <Suspense fallback={<h1>Post P10 loading...</h1>}>
+          <Post postId="P10" />
+        </Suspense>
+      </ErrorBoundary>
+    )
+  }
+  ```
+---
+### Error Boundary
+- Eine Error Boundary-Komponente kann man grundsätzlich selbst bauen
+- Fehler, die beim Rendern unterhalb einer Error-Boundary-Komponente auftreten, werden als eine Art Propertie in die nächsthöhere Error-Boundary-Komponente gegeben
+  - ähnlich wie try/catch
+- Die Komponente kann dann eine Fehlermeldung o.ä. rendern
+- Ihr könnt damit sehr feingranular steuern, wo Fehler angezeigt werden sollen (wenn _eine_ Abfrage nicht funktioniert, können die anderen weiterlaufen - oder nicht)
+- Es gibt eine fertige, generische Error-Boundary-Komponente: [react-error-boundary](https://www.npmjs.com/package/react-error-boundary)
+  - 👉 Wenn ihr mit Error Boundaries arbeitet, verwendet diese fertige Komponente
+- Auch TanStack Query hat eine Error-Boundary-Komponente, [QueryErrorResetBoundary](https://tanstack.com/query/latest/docs/framework/react/reference/QueryErrorResetBoundary)
+  - Mit dieser gibt es die Möglichkeit, einen fehlerhaften Query wiederholen zu lassen (auch durch User-Interaktion, z.B. Button click)
+  - Mit [useQueryErrorResetBoundary](https://tanstack.com/query/latest/docs/framework/react/reference/useQueryErrorResetBoundary) könnt ihr auch die Reset-Funktion von `react-error-boundary` verwenden
+* ```typescript
+  import { ErrorBoundary } from "react-error-boundary";
+  import { useQueryErrorResetBoundary } from "@tanstack/react-query";
+
+  export default function PostPage() {
+    const { reset } = useQueryErrorResetBoundary();
+    const postId = ... ;
+    return <ErrorBoundary FallbackComponent={PostErrorFallback} onReset={reset}>
+      <Suspense fallback={<LoadingIndicator />}>
+        <PostView postId={postId} />
+      </Suspense>
+    </ErrorBoundary>
+
+  }
+  ```
+* ```typescript
+  import { FallbackProps } from "react-error-boundary";
+
+  function PostErrorFallback(p: FallbackProps) {
+    return (
+      <div>
+        <h1>Loading Post failed</h1>
+        <button onClick={() => p.resetErrorBoundary()}>Retry</button>
+      </div>
+    );
+  }
+  ```
+---
+### Priorisierung
+* Mit Suspense könnt ihr einzelne Teile der UI priorisieren
+* Ihr könnt z.B. steuern, welche Teile schon dargestellt werden sollen, auch wenn noch andere Daten fehlen
+* ...oder das auf _alle_ Daten gewartet werden soll
+* Was jeweils "richtig" ist, hängt von den fachlichen Anforderungen ab
+---
+### Priorisierung
+* In der `PostPage` werden Daten aus zwei Requests benötigt: der Blog-Post und Informationen über dessen Autoren
+* Beide Requests können zeitgleich (oder nacheinander) gestartet werden
+* Durch das Festlegen der Suspense-Komponente könnt ihr ausdrücken, welche Teile wichtig sind (sofort rendern, sobald Daten da sind), oder "unwichtig"
+* Was passiert hier:
+* ```typescript
+  function PostPage() {
+    const {data: user} = useSuspenseQuery(/* User */);
+    const {data: post} = useSuspenseQuery(/* Post */);
+
+    // ...
+  }
+  ```
+* React rendert Komponente bis zum ersten `useSuspenseQuery`
+* Wenn die Daten da sind, wird die Komponente nochmal gerendert
+* Diesmal bis zum zweiten `useSuspenseQuery`
+* Die Daten werden also *nacheinander* nicht *parallel* geladen. 😢
+---
+### Priorisierung mit TanStack Query
+* Um die Daten parallel zu laden, könnt ihr TanStack Query anweisen, Daten in den Cache zu laden, *ohne* darauf zu warten
+* Dazu verwendet ihr `QueryClient.ensureData`, das die selben Parameter wie `useSuspenseQuery` bzw. `useQuery` entgegennimmt
+* TanStack Query startet dann den Request im Hintergrund (und legt die Daten in den Cache, sobald sie vorliegen)
+* Um also *nicht* auf die User-Daten zu warten könnt ihr folgendes tun:
+* ```typescript
+  function PostPage({postId}) {
+    const queryClient = useQueryClient();
+    queryClient.ensureData({queryFn: /* ... */, queryKey: ["post", postId, "user"]});
+    const {data: post} = useSuspenseQuery(/* Post */);
+
+    return ...;
+  }
+  ```
+* Hier werden beide Requests gestartet und React wartet dann auf das Ergebnis des Post-Queries
+* In einer weiteren Komponente könntet ihr dann auf die User-Daten warten, die im besten Fall dann sogar schon im Cache sind:
+* ```typescript
+  function User({postId}) {
+    // Query-Key muss mit dem Query-Key von oben übereinstimmen!
+    const data = useSuspenseQuery({queryFn: /* ... */, queryKey: ["post", postId, "user"]});
+
+    // User-Daten rendern
+
+    return ...;
+  }
+  ```
+---
 
   </textarea
           >
