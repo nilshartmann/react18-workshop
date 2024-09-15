@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export type BlogPost = {
-  id: string;
-  title: string;
-  body: string;
-  date: string;
-  tags: string[];
-  likes?: number;
-};
+// export type BlogPost = {
+//   id: string;
+//   title: string;
+//   body: string;
+//   date: string;
+//   tags: string[];
+//   likes?: number;
+// };
 
 //  UEBUNG: Validierung mit zod
 //  ------------------------------------------------------------
@@ -47,3 +47,16 @@ export type BlogPost = {
 //    - Du kannst ungültige Daten simulieren, in dem Du die URL in der PostPageList-Komponente anpasst:
 //       http://localhost:7000/posts?fail
 //    - Lass dir den Fehler in der Browser-Komponente anzeigen
+
+export const BlogPostSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  body: z.string(),
+  tags: z.string().array(),
+  likes: z.number(),
+  date: z.string()
+});
+
+export const GetBlogPostsResponse = BlogPostSchema.array();
+
+export type BlogPost = z.infer<typeof BlogPostSchema>;

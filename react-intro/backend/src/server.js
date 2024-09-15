@@ -131,6 +131,17 @@ app.get("/posts", (req, res) => {
     });
   }
 
+  if (req.query.fail !== undefined) {
+    result = result.map((a, ix) =>
+      ix === 1
+        ? {
+            ...a,
+            body: null
+          }
+        : a
+    );
+  }
+
   res.status(200).json(result);
 });
 
