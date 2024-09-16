@@ -180,6 +180,30 @@
         </section>
 
         <section>
+          <h3>Komponenten in React</h3>
+          <p>
+            <em>Zentrales Konzept in React: <b>Komponenten</b></em>
+          </p>
+          <img style="height: 800px" src="slides/images/soc.png" />
+        </section>
+
+        <section>
+          <h3>React Komponenten</h3>
+          <ul>
+            <li>bestehen aus <b>Logik und UI</b> (kein MVC-Pattern o.ä.)</li>
+            <li>werden <b>deklarativ</b> beschrieben</li>
+            <li>werden bei Änderungen immer <b>komplett neu gerendert</b></li>
+            <li>werden zu <b>ganzen Anwendungen</b> aggregiert</li>
+            <li>sind technisch normale JavaScript bzw. TypeScript-<b>Funktionen</b></li>
+            <li>
+              verwenden die Spracherweiterung
+              <b><a href="https://react.dev/learn/writing-markup-with-jsx">JSX</a></b
+              >, um UI zu beschreiben (keine Templatesprache)
+            </li>
+          </ul>
+        </section>
+
+        <section>
           <h2>Unsere erste React-Komponente</h2>
 
           <ul>
@@ -240,7 +264,10 @@
   const root = createRoot(document.getElementById('root')!);
   root.render(&lt;PostEditor />);
   </code></pre>
-            <p>Im Workspace ist die Root-Komponente die <code>App</code>-Komponente</p>
+            <p>
+              ⚠️ Im unserem Workspace ist die Root-Komponente die <code>App</code>-Komponente
+              (<code>src/App.tsx</code>)
+            </p>
           </div>
         </section>
 
@@ -1452,7 +1479,7 @@ function TagChooser({title = "Select Tag", availableTags}: TagChooserProps) {
 ## Data Fetching
 * React macht keine bzw. nur sehr wenig Angaben, wie mit serverseitigen Daten gearbeitet wird
 * Ihr müsst euch in der Regel entscheiden:
-  * wie ihr HTTP Request technisch durchführt
+  * wie ihr HTTP Requests durchführt
   * ob/welche Bibliothek zum Data Fetching ihr benutzt (z.B. für Caching, Validierung etc.)
 ---
 ## Data Fetching
@@ -2516,7 +2543,6 @@ freigeben), kann die Callback-Funktion als Rückgabe eine "Clean-Up"-Funktion zu
 
         <section data-markdown="">
           <textarea data-template>
----
 <!-- .slide: id="t-zod" -->
 # Validieren von Daten
 ## ...am Beispiel von zod
