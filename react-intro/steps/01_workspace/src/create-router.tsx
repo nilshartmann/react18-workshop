@@ -26,6 +26,9 @@ import { createBrowserRouter } from "react-router-dom";
 //         - die beiden bestehenden Routen musst du dann als "children" deines neuen
 //           Root-Eintrags hinzufügen
 //           (PostListPage dann mit "index: true" kennzeichnen)
+//   - ZUSATZ #2:
+//     - Kannst du den PostEditor so umbauen, dass nach dem erfolgreichen (!) Speichern
+//       eines Blog Posts die PostListe angezeigt wird?
 //
 
 export const router = null;
