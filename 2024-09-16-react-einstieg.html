@@ -130,6 +130,7 @@
   * [Seiteneffekte mit useEffect](#/seiteneffekte)
   * [Validieren von Daten mit zod](#/t-zod)
   * [Data Fetching mit React Suspense](#/t-suspense)
+  * [Testen von React-Anwendungen](#/t-test)
 * Wenn ihr weitere Themen und Wünsche habt, jederzeit gerne. Einfach Bescheid sagen!
 
 
@@ -3025,7 +3026,609 @@ freigeben), kann die Callback-Funktion als Rückgabe eine "Clean-Up"-Funktion zu
   </textarea
           >
         </section>
+        <section id="t-test">
+          <h2>Testen von React Anwendungen</h2>
+        </section>
 
+        <section data-transition="slide none">
+          <h2>Was testen wir?</h2>
+          <ul>
+            <li><b>UI-unabhängige Logik</b> (zum Beispiel Backend Calls, Berechnungen etc.)</li>
+            <li>
+              <b>Rendering</b> (Ist die Liste der Blog Posts korrekt? Sieht das Markup aus, wie wir
+              uns das vorstellen?) und <b>Interaktionen</b> (funktionieren die Event Handler, die
+              Callback-Funktionen, der Programmfluß etc.?)
+            </li>
+            <li>
+              <b>Verhalten im Browser</b> (z.B. korrekte, pixelgenaue Darstellung,
+              Browser-spezifisches JavaScript, Arbeiten mit Browser-Technologie wie Titelzeile,
+              Session Storage, Scrollbars etc)
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h1>Jest</h1>
+          <p>
+            <em
+            >"Delightful JavaScript Testing" (
+              <a href="https://jestjs.io/" target="_blank">https://jestjs.io/</a>)</em
+            >
+          </p>
+          <p>Vollständige Testlösung für React (und andere):</p>
+          <ul>
+            <li>API vergleichbar mit <a href="https://jasmine.github.io/">Jasmine</a></li>
+            <li>Test Runner</li>
+            <li>Specs/Assertions, Mocks</li>
+            <li>Code Coverage</li>
+            <li>"Snapshot testing"</li>
+          </ul>
+        </section>
+        <section data-markdown="">
+          <textarea data-template>
+# Vitest
+
+* **ACHTUNG!** Die Folien behandeln noch Jest, aber in neuen Projekten (mit Vite) würde man [Vitest](https://vitest.dev/) verwenden
+* Die API von Vitest ist sehr ähnlich wie die hier beschriebene von Jest
+* Es gibt einen [Migration Guide](https://vitest.dev/guide/migration.html#migrating-from-jest) der bei der Umstellung Jest hilft
+* Die weiter hinten beschriebene React Testing Library kann sowohl mit Vitest als auch mit Jest verwendet werden.
+          </textarea>
+         </section>
+
+        <section>
+          <h4>Jest</h4>
+          <h3>Beispiel: Ein einfacher Testfall</h3>
+          <pre><code class="javascript"  >// sum.js (or sum.ts)
+        export const sum = (a,b) => a+b;
+                </code></pre>
+          <pre><code class="javascript"  >// sum.test.js
+        import {sum} from '../sum.js';
+
+        test('sum of 2 and 2 is 4', () => {
+          expect(sum(2, 2)).toBe(4);
+        });
+
+        test('sum of 2 and 2 is not 3', () => {
+          expect(sum(2, 2)).not.toBe(3);
+        });
+                    </code></pre>
+        </section>
+        <section>
+          <h4>Jest</h4>
+          <h2>Testcases</h2>
+          <p>
+            <code>test</code> oder
+            <code>it</code>
+          </p>
+          <pre><code>test('it should work', () => {
+          expect(...).toBe(...);
+        });</code></pre>
+          <pre><code>it('it should also work', () => {
+          expect(...).toBe(...);
+        });</code></pre>
+        </section>
+
+        <section>
+          <h4>Jest</h4>
+          <h2>"Expectations" und "Matchers"</h2>
+          <div>
+            <p>
+              <code>expect()</code> liefert ein <em>Expectation</em> Objekt zurück, das verschiede
+              <em>Matcher</em> Funktionen bereitstellt:
+            </p>
+            <pre><code>expect(actual).toXyz(expected);
+        // for example:
+        expect("Hello Jest").toBe("Hello Jest"); // => ok
+                </code></pre>
+          </div>
+          <div>
+            <p>Beispiele für Matchers</p>
+
+            <pre><code>// Compare identity
+        expect(actual).toBe(expected);
+        // Compare value:
+        expect(actual).toEqual(expected);
+        // true / false / null:
+        expect(actual).toBeTruthy();
+        expect(actual).toBeFalsy();
+        expect(actual).toBeNull();
+        // Length (Array oder String)
+        expect(actual).toHaveLength(123);
+                </code></pre>
+          </div>
+          <p>
+            <a href="https://jestjs.io/docs/en/expect">https://jestjs.io/docs/en/expect</a>
+          </p>
+        </section>
+
+        <section>
+          <h4>Jest</h4>
+          <h2>Mock Funktionen</h2>
+          <ul>
+            <li>
+              <code>jest.fn()</code> erzeugt eine Mock-Funktion
+              <pre><code>// Gibt undefined zurück, wenn die Mock-Funktion ausgeführt wird
+        const aMockFn = jest.fn();
+
+        const x = aMockFn("huhu"); // => undefined
+        expect(x).toBeUndefined();
+
+        expect(aMockFn).toHaveBeenCalled());
+        expect(aMockFn.toHaveBeenCalledWith("huhu"));
+                              </code></pre>
+            </li>
+
+            <li>
+              Implementierung der Mock-Funktion kann als Parameter übergeben:
+              <pre><code>
+                const aMockFn = jest.fn( param => `Hello, ${param}` );
+
+                console.log(aMockFn('World'));
+                // => Hello, World
+                          </code></pre>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Testen von React Komponenten</h3>
+          <h2>Nur rendern</h2>
+        </section>
+
+        <section>
+          <h3>React Test Renderer</h3>
+          <p>
+            <a href="https://www.npmjs.com/package/react-test-renderer"
+            >https://www.npmjs.com/package/react-test-renderer</a
+            >
+          </p>
+          <p>Rendert React Komponenten in JSON Objekte (ohne DOM):</p>
+          <pre><code class="javascript"  >import renderer from 'react-test-renderer';
+
+        const component = renderer.create(
+          &lt;PostList posts={somePosts} />
+        );
+
+        console.log(component.toJSON());
+                    </code></pre>
+          <pre><code class="javascript"  >
+                { type: 'div',
+                  props: {},
+                  children:  [
+                    { type: 'button', props: {}, children: [Object] },
+                    { type: 'article', props: [Object], children: [Object] },
+                    { type: 'article', props: [Object], children: [Object] }
+                  ]
+                }
+                    </code></pre>
+        </section>
+        <section>
+          <h3>"Snapshot Testing" mit Jest</h3>
+          <p>
+            <code>expect(obj).toMatchSnapshot()</code> vergleicht ein erzeugtes JSON-Objekt mit
+            einem gespeicherten JSON-Objekt aus einer Datei:
+          </p>
+          <ul>
+            <li>
+              Bei der <b>ersten</b> Ausführung: Snapshot-Datei wird angelegt (
+              <a href="slides/images/jest-snapshot-file.png" target="_blank">Beispiel</a>)
+              <ul>
+                <li>Die Snapshot-Datei wird nun in Git eingecheckt</li>
+              </ul>
+            </li>
+            <li>
+              In den <b>folgenden</b> Test Ausführungen: ein neuer Snapshot wird jeweils erzeugt und
+              mit dem <b>gespeicherten</b> Snapshot verglichen
+            </li>
+            <li>
+              Wenn die Snapshots nicht identisch sind:
+              <ul>
+                <li>
+                  Fehler mit Unterschieden (<a
+                    href="slides/images/jest-snapshot-diff.png"
+                    target="_blank"
+                >Beispiel</a
+                >)
+                </li>
+                <li>
+                  Im "watch mode" von Jest kann der Snapshot aktualisiert werden
+                  <img src="slides/images/jest-snapshot-update.png" />
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Snapshot Tests mit Jest und React</h3>
+          <pre><code class="javascript"  >import renderer from 'react-test-renderer';
+
+        test('it should render correctly', () => {
+
+          const somePosts = [ . . . ];
+
+          const component = renderer.create(
+            &lt;PostList posts={somePosts} />
+          );
+
+          expect(component.toJSON()).toMatchSnapshot();
+        });
+                    </code></pre>
+        </section>
+
+        <section>
+          <h3>Testing React Components #2</h3>
+          <h2>Interaktionen</h2>
+        </section>
+
+        <section>
+          <h3>react-testing-library</h3>
+          <p>
+            <em
+            >"Simple and complete React DOM testing utilities that encourage good testing
+              practices."
+            </em>
+          </p>
+
+          <p>
+            <a href="https://github.com/testing-library/react-testing-library" target="_blank"
+            >https://github.com/testing-library/react-testing-library</a
+            >)
+          </p>
+          <p>
+            Philosophie: Tests werden aus User-Perspektive geschrieben. Das bedeutet, um die zu
+            testenden Elemente zu finden, suchst Du nach Eigenschaften, nach denen auch ein User
+            suchen würde (z.B. Labels, Placeholder etc.)
+          </p>
+          <p>👉 <code>workspace-typescript</code></p>
+        </section>
+        <section>
+          <h3>react-testing-library</h3>
+          <p>Example</p>
+          <pre><code class="javascript"  >
+                    import { render, screen } from "@testing-library/react";
+                    import userEvent from "@testing-library/user-event";
+
+                    it("invokes callback on button click", () => {
+                      const onAddPostFn = jest.fn();
+
+                      // Render
+                      render(&lt;PostList onAddPost={onAddPostFn} posts={mockPosts} />);
+
+                      // search the button
+                      const buttonElement = screen.getByRole("button", { name: "Add Post" });
+
+                      // "click" the button
+                      userEvent.click(buttonElement);
+
+                      // make sure it has been invoked
+                      expect(onAddPostFn).toHaveBeenCalled();
+                    });
+
+
+                    </code></pre>
+        </section>
+
+        <section>
+          <h3>Die render-Funktion</h3>
+          <ul>
+            <li>
+              Die render-Function aus der react-testing-library wird im Test verwendet, um eine
+              React Komponente (ohne Browser) zu rendern
+            </li>
+            <li>Genauso wie in der Anwendungen können Properties angegeben werden</li>
+            <li>
+              <pre><code class="javascript"  >
+        import { render } from "@testing-library/react";
+
+        // Render a single component
+        render(&lt;PostList onAddPost={onAddPostFn} posts={mockPosts} />);
+                    </code></pre>
+            </li>
+            <li>
+              Dran denken, ggf. Contexte ebenfalls zu erzeugen, falls diese benötigt werden (React
+              Router, Redux etc)!
+            </li>
+            <li>
+              <pre><code class="javascript"  >
+
+        // Render with surrounding Redux Provider (or Router, your own Context etc.)
+        render(
+          &lt;Provider>
+            &lt;PostList onAddPost={onAddPostFn} posts={mockPosts} />
+          &lt;/Provider>
+        );
+                    </code></pre>
+            </li>
+          </ul>
+        </section>
+        <section>
+          <h3>query Funktionen</h3>
+          <p>
+            Um die gerenderten HTML-Elemente aus deiner Komponente zu überprüfen und mit ihnen zu
+            interagieren, musst Du sie ersteinmal finden 🤓
+          </p>
+          <p>
+            Auf dem globalen <b>screen</b> Objekt der Testing-Lib sind verschiedene Funktionen
+            definiert, mit denen Du nach Elementen suchen kannst
+          </p>
+          <p>
+            Die query-Funktionen haben unterschiedliche <b>Suffixe</b>, die beschreiben,
+            <b>nach welchem Kriterium</b> Du suchst (nach Label, nach aria-role, ...)
+          </p>
+          <p>
+            Die Funktionen haben außerdem jeweils einen <b>Präfix</b> (getBy, queryBy etc) der
+            beschreibt, die Art des Rückgabewerts der jeweilgen Funktion (z.B. ob sie einen Error
+            wirft oder null zurückgibt, wenn das angefragte Element nicht gefunden wurde)
+          </p>
+          <p>
+            Mehr zu den query-Funktionen:
+            <a
+                target="_blank"
+                href="https://testing-library.com/docs/react-testing-library/cheatsheet#queries"
+            >React Testing Library Cheatsheet</a
+            >
+          </p>
+
+          <pre><code class="javascript">
+          // BEISPIELE:
+
+          // suche nach einem Button (Annahme: es gibt GENAU EINEN, ansonsten schlägt der Test fehl)
+          const buttonElement = screen.getByRole("button", { name: "Add Post" });
+
+          // suche nach einem Button (gibt null oder EINEN Button, wirft ansonst einen Fehler)
+          const buttonElement = screen.queryByRole("button", { name: "Add Post" });
+
+          // suche nach einem Button (gibt alle gefunden zurück oder ein leeres Array)
+          const buttonElement = screen.queryAllByRole("button", { name: "Add Post" });
+        </code></pre>
+        </section>
+
+        <section>
+          <h3>Überprüfen von Elementen</h3>
+          <p>
+            Wenn Du dein gesuchtes Elemente gefunden hast, kannst Du es überprüfen, ob es deinen
+            Erwartungen entspricht (korrekte Attribute gesetzt etc.)
+          </p>
+          <p>
+            Die Bibliothek
+            <a href="https://github.com/testing-library/jest-dom" target="_blank">jest-dom</a> fügt
+            dazu DOM-spezifiche Matcher für Jest hinzu.
+          </p>
+
+          <pre><code class="javascript">
+          import { screen } from "@testing-library/react";
+
+          const buttonElement = screen.queryByRole("button", { name: "Add Post" });
+
+          // stellt sicher, dass das Element im DOM vorhanden ist (getBy-Query würde hier vielleicht mehr Sinn machen)
+          expect(buttonElement).toBeInTheDocument();
+
+          // sicherstellen, dass ein Eingabefeld einen erwarteten Wert hat
+          expect(titleInput).toHaveValue("Moin moin");
+
+          // sicherstellen, dass ein Button disabled ist
+          expect(okButton).toBeDisabled();
+        </code></pre>
+          <p>Alle Matcher sind auf der oben verlinkten GitHub Seite dokumentiert</p>
+        </section>
+        <section>
+          <h3>Interaktionen</h3>
+          <p>
+            Du kannst mit den Elementen interagieren, in dem Du ihnen Events sendest, genau wie es
+            ein Browser tun würde
+          </p>
+          <p>
+            Es gibt eine weitere Bibliothek,
+            <a href="https://github.com/testing-library/user-event" target="_blank"> user-event</a>,
+            die dir dabei hilft, die Events zu erzeugen.
+          </p>
+
+          <pre><code class="javascript">
+                    import userEvent from "@testing-library/user-event";
+                    // Simuliert die Eingabe in ein Textfeld
+                    userEvent.type(titleInput, "New Title");
+
+                    // Simuliert den Klick auf einen Button
+                    userEvent.click(clearButton);
+                  </code></pre>
+          <p>Alle Events sind auf der GitHub Seite beschrieben (Link oben)</p>
+
+          <p>
+            Vor dem Versenden eines Events musst Du <b>nicht</b> überprüfen, ob das Element, dem Du
+            das Event senden willst, vorhanden ist. Die Bibliothek gibt eine sehr sprechende Fehler
+            aus, wenn das Element nicht vorhanden ist
+          </p>
+        </section>
+        <section>
+          <h3>Testen von fetch-Aufrufen</h3>
+          <p>Herausforderungen:</p>
+          <ul>
+            <li>Asynchroner Code (nicht beschränkt auf fetch)</li>
+            <li>Server Zugriffe/Server Mocks</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Behandlung von asynchronem code</h3>
+        </section>
+
+        <section>
+          <h3>Testen von asynchronem Code</h3>
+          <p>
+            Beispiel: Die <b>App</b> Komponente lädt Daten, <em>erst dann</em> stellt sie die
+            PostList dar. Das Laden der Posts ist asynchron.
+          </p>
+
+          <pre><code class="javascript">
+                    it("should render posts read from backend", () => {
+                      render(&lt;App />);
+
+                      // Annahme: es gibt einen Artikel mit dem Title "Learning React"
+                      const articleOne = screen.findByRole("heading", { name: "Learning React" });
+
+                      expect(articleOne).toBeInTheDocument(); // THIS WON'T WORK!
+                    });
+                  </code></pre>
+          <p>
+            Wir können einen Test als async-funktion schreiben und darin mit <b>await</b> auf ein
+            Element warten
+          </p>
+          <pre><code class="javascript">
+                    // Test-Funktion als async-Funktion (beachte 'async'):
+                    it("should render posts read from backend", async () => {
+                      render(&lt;App />);
+
+                      // Beachte await hier:
+                      const articleOne = await screen.findByRole("heading", { name: "Learning React" });
+
+                      expect(articleOne).toBeInTheDocument(); // YIPPIE, WORKS
+                    });
+                  </code></pre>
+        </section>
+
+        <!-- ============================================================================= -->
+        <section>
+          <h3>Testen von fetch</h3>
+          <p>Wie gesehen, können wir asynchronen Code testen</p>
+          <p>Wollen wir fetch-Aufrufe in unserem Code haben, den wir testen?</p>
+          <p>
+            Möglicherweise nicht, weil wir bei echten fetch-Aufrufen auch einen echten, laufenden
+            und funktionierenden Server im Test bräuchten
+          </p>
+          <p>Stattdessen wollen wir das "echte" fetch mocken</p>
+        </section>
+
+        <section>
+          <h3>Fetch mocken, Ansatz #1</h3>
+          <p>Wir können <b>komplette Module</b> in Jest mocken</p>
+          <p>Wir könnten unseren fetch-Code in ein eigenes Modul schieben und das dann mocken</p>
+
+          <pre><code class="javascript">
+                    // api.ts (fetch vereinfacht!)
+                    export function readPosts() {
+                      return fetch("http://localhost:7000/posts").then(response => response.json());
+                    }
+                  </code></pre>
+
+          <pre><code class="javascript">
+                    // App.tsx:
+
+                    import { readPosts } from "./api";
+                    function App() {
+                      // ...
+                      React.useEffect(() => {
+                        // Verwenden von readPosts hier:
+                        readPosts()
+                          .then(json => {
+                            setLoading(false);
+                            setPosts(json);
+                          })
+                          .catch(err => console.error("Loading data failed: " + err));
+                      }, []);
+                    }
+                  </code></pre>
+        </section>
+        <section>
+          <h3>Mocken von Modulen in Jest</h3>
+          <p>Es gibt mehrere Varianten. Das hier die einfachste(?)</p>
+
+          <pre><code class="javascript">
+                    // App.test.tsx
+
+                    const mockPosts = [
+                      { id: "1", title: "One Fetch Mock", body: "Lorem ipsum" },
+                      { id: "2", title: "Second Post Fetch Mock", body: "Some more content" }
+                    ];
+
+                    jest.mock("../api", () => ({
+                      readPosts: () => Promise.resolve(mockPosts)
+                    }));
+
+                    it("should render posts read from backend", async () => {
+                      render(&lt;App />);
+
+                      // Hier immer noch asnychroner Code (deswegen await), aber:
+                      // kein laufender Server mehr benötigt
+                      const articleOne = await screen.findByRole("heading", { name: "One" });
+                      expect(articleOne).toBeInTheDocument();
+
+                      expect(screen.getByText("Second Post")).toBeInTheDocument();
+                    });
+                  </code></pre>
+          <p>
+            Beispiel:
+            <code
+            >blog-example/steps/6a-testing-with-api-module/src/__tests__/App_module_mock.test.tsx</code
+            >
+          </p>
+        </section>
+        <section>
+          <h3>Ansatz #2: fetch API mocken</h3>
+          <p>Es gibt mehrere Bibliothken mit fetch-Mocks</p>
+          <p>
+            Für mich funktioniert
+            <a href="https://www.npmjs.com/package/jest-fetch-mock" target="_blank"
+            >jest-fetch-mock</a
+            >
+            am Besten
+          </p>
+
+          <pre><code class="javascript">
+                    // App.test.tsx
+                    it("should render posts read from backend", async () => {
+                      // setzen des Ergebnisses, das der nächste fetch-Aufruf zurückliefern soll
+                      fetchMock.mockResponse(JSON.stringify(mockPosts));
+
+                      render(&lt;App />);
+
+                      // Immer noch asynchroner Code, aber kein "echter" fetch-Aufruf mehr,
+                      // zurückgegeben wird das oben angegebene Ergebnis
+                      const articleOne = await screen.findByRole("heading", { name: "One Fetch Mock" });
+
+                      expect(articleOne).toBeInTheDocument();
+                    });
+
+                  </code></pre>
+          <p>
+            Beispiel:
+            <code
+            >blog-example/steps/6a-testing-with-api-module/src/__tests__/App_jest_mock.test.tsx</code
+            >
+          </p>
+        </section>
+
+        <!-- ============================================================================= -->
+        <section>
+          <h3>Ansatz #3: Mock Service Worker (MSW)</h3>
+
+          <p><a href="https://github.com/mswjs/msw" target="_blank">MSW</a></p>
+          <p>
+            MSW mockt echte Server-Aufrufe mit einem
+            <a href="https://developer.mozilla.org/de/docs/Web/API/Service_Worker_API"
+            >Service Worker</a
+            >
+          </p>
+          <p>
+            fetch-Aufrufe werden "richtig" ausgeführt, aber beantwortet von dem Service Worker Mock
+          </p>
+
+          <pre><code class="javascript">
+                    // PostList.test.js
+                    import { rest } from 'msw'
+                    import { setupServer } from 'msw/node'
+
+                    const server = setupServer(
+                      rest.get('/posts', (req, res, ctx) => {
+                        return res(ctx.json( mockPosts ))
+                      }),
+                    )
+
+                    test("it should render blog list", async () => {
+                      render(&lt;PostList />);
+                      // ...
+                    })
+                  </code></pre>
+        </section>
         <section>
           <h2>Geschafft! 😊</h2>
           <h3>Vielen Dank für Eure Teilnahme!</h3>
