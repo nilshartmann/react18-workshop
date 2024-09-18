@@ -1,0 +1,18 @@
+1. Baue eine PostPreview-Komponente (direkt in der Datei PostEditor.tsx)
+
+2. Diese Komponente soll den Titel, den Body und die Tags eines Blog Posts als "Vorschau" anzeigen
+
+3. Baue eine neue Komponente PostEditorPage
+   - diese musst du mit "default export function PostEditorPage" exportieren
+   - den bisherigen "export default" bitte löschen (nur noch "function PostEditor", ohne "export default"):
+     - export default function PostEditorPage() { /* ... */ }
+     - function PostEditor() { /* ... */ }
+
+4. In der neuen PostEditorPage-Komponente brauchst du einen Button, der entscheidet,
+   - ob der PostEditor oder die PostPreview-Komponente angezeigt wird
+     ("Show Preview" bzw. wenn PostPreview angezeigt wird "Show Editor")
+
+5. Welchen State musst du aus der PostEditor-Komponente in die PostEditorPage verschieben?
+   - kannst Du den Button zum öffnen der PostPreview disablen, wenn im PostEditor nichts eingegeben ist?
+
+6. Der "Clear"-Button soll im PostEditor verbleiben

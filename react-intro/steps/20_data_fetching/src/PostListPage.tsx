@@ -1,9 +1,10 @@
-import { BlogPost } from "./types";
+import {BlogPost, GetBlogPostsResponse} from "./types";
 import { useQuery } from "@tanstack/react-query";
 import ky from "ky";
 import LoadingIndicator from "./LoadingIndicator.tsx";
 import PostList from "./PostList.tsx";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 //   ---------------------------------------------------------------------------------
 //   - ÜBUNG: TANSTACK QUERY ZUM LADEN VON DATEN
@@ -79,11 +80,20 @@ export default function PostListPage() {
     queryKey: ["posts", orderByLikes],
     // ohne Sortieren nach Likes:
     // queryKey: ["posts"],
-    queryFn() {
+    async queryFn() {
       // URL ohne Sortieren der Likes: http://localhost:7000/posts
-      return ky
-        .get<BlogPost[]>(`http://localhost:7000/posts${orderByLikes ? "?orderBy=likes" : ""}`)
+      const data = await ky
+        .get(`http://localhost:7000/posts?fail`)
         .json();
+
+      const posts = GetBlogPostsResponse.parse(data);
+
+      // const posts = GetBlogPostsResponse.safeParse(data);
+      // if (posts.success) {
+      //   return posts;
+      // }
+
+      return posts;
     }
   });
 
@@ -92,12 +102,15 @@ export default function PostListPage() {
   }
 
   if (postListQuery.isError) {
+    console.error(postListQuery.error);
     return <h1>Loading failed 😢</h1>;
   }
 
   return (
     <div>
       <div className={"PageHeader"}>
+        <a href={"/editor"}>Editor (falsch!)</a>
+        <Link to={"/editor"}>Editor (richtig!)</Link>
         <h1>Blog Posts</h1>
         {/* ZUSATZ AUFGABE: Sortieren nach Likes */}
         <button className={"small"} onClick={() => setOrderByLikes(!orderByLikes)}>

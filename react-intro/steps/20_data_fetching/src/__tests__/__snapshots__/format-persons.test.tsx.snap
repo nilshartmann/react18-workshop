@@ -1,0 +1,127 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renders correctly 1`] = `
+<DocumentFragment>
+  <div>
+    <h1>
+      Create Post
+    </h1>
+    <label>
+      Title
+      <input
+        value=""
+      />
+    </label>
+    <p
+      class="error"
+    >
+      Please enter a title
+    </p>
+    <label>
+      Body
+      <textarea />
+    </label>
+    <p
+      class="error"
+    >
+      Please enter a body
+    </p>
+    <div>
+      <h2 />
+      <div
+        class="TagChooser__tags"
+      >
+        <label>
+          <input
+            type="checkbox"
+          />
+          React
+        </label>
+        <label>
+          <input
+            type="checkbox"
+          />
+          TypeScript
+        </label>
+        <label>
+          <input
+            type="checkbox"
+          />
+          JavaScript
+        </label>
+      </div>
+    </div>
+    <button
+      disabled=""
+    >
+      Clear
+    </button>
+    <button>
+      Save
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`renders correctly mit snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <h1>
+      Create Post, aber simple!
+    </h1>
+    <label>
+      Title
+      <input
+        value=""
+      />
+    </label>
+    <p
+      class="error"
+    >
+      Please enter a title
+    </p>
+    <label>
+      Body
+      <textarea />
+    </label>
+    <p
+      class="error"
+    >
+      Please enter a body
+    </p>
+    <div>
+      <h2 />
+      <div
+        class="TagChooser__tags"
+      >
+        <label>
+          <input
+            type="checkbox"
+          />
+          React
+        </label>
+        <label>
+          <input
+            type="checkbox"
+          />
+          TypeScript
+        </label>
+        <label>
+          <input
+            type="checkbox"
+          />
+          JavaScript
+        </label>
+      </div>
+    </div>
+    <button
+      disabled=""
+    >
+      Clear
+    </button>
+    <button>
+      Save
+    </button>
+  </div>
+</DocumentFragment>
+`;

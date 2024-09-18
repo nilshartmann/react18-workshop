@@ -1,13 +1,29 @@
 import { z } from "zod";
 
-export type BlogPost = {
-  id: string;
-  title: string;
-  body: string;
-  date: string;
-  tags: string[];
-  likes?: number;
-};
+// export type BlogPost = {
+//   id: string;
+//   title: string;
+//   body: string;
+//   date: string;
+//   tags: string[];
+//   likes?: number;
+// };
+
+export const BlogPostSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  body: z.string(),
+  date: z.string(),
+  tags: z.string().array(),
+  likes: z.number().optional()
+});
+
+export type BlogPost = z.infer<typeof BlogPostSchema>;
+
+export const GetBlogPostsResponse = BlogPostSchema.array();
+
+// const geparsterBlogPost = BlogPostSchema.parse({});
+// geparsterBlogPost
 
 //  UEBUNG: Validierung mit zod
 //  ------------------------------------------------------------

@@ -36,7 +36,7 @@ export default function PostEditor() {
 
   return (
     <div>
-      <h1>Create Post</h1>
+      <h1>Create Post XXX</h1>
 
       <label>
         Title

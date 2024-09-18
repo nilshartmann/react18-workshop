@@ -1,5 +1,7 @@
 import { BlogPost } from "./types";
 import PostList from "./PostList.tsx";
+import {useQuery} from "@tanstack/react-query";
+import ky from "ky";
 
 //   ---------------------------------------------------------------------------------
 //   - ÜBUNG: TANSTACK QUERY ZUM LADEN VON DATEN
@@ -68,27 +70,33 @@ import PostList from "./PostList.tsx";
 //       - Achtung! Du musst auch den queryKey anpassen
 
 export default function PostListPage() {
-  const mockPosts: BlogPost[] = [
-    {
-      id: "1",
-      title: "One Fetch Mock",
-      body: "Lorem ipsum",
-      date: "2024-09-13T07:29:33.123Z",
-      tags: ["Mock"]
+
+  const result = useQuery({
+    queryKey: ["posts"],
+    staleTime: 0,
+    queryFn() {
+      return ky.get<BlogPost[]>("http://localhost:7000/posts?slow").json();
     },
-    {
-      id: "2",
-      title: "Second Post Fetch Mock",
-      body: "Some more content",
-      date: "2024-08-12T09:13:33.123Z",
-      tags: ["Mock", "UI"]
-    }
-  ];
+    // enabled: false
+
+
+  })
+
+  if (result.isPending) {
+    return <h1>Blog Posts werden geladen...</h1>
+  }
+
+  if (result.isError) {
+    return <h1>Request hat nicht funktioniert</h1>
+  }
+
 
   return (
     <div>
       <h1>Blog Posts</h1>
-      <PostList posts={mockPosts} />
+      <button onClick={() => result.refetch()}>Reload Blog posts!</button>
+      {result.isFetching && <p>Data refreshing...</p>}
+      <PostList posts={result.data} />
     </div>
   );
 }

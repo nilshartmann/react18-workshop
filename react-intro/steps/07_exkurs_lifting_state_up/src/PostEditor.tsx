@@ -5,6 +5,25 @@ import TagChooser from "./TagChooser.tsx";
 
 const ALL_TAGS = ["React", "TypeScript", "JavaScript"];
 
+type LayoutProps  ={
+  left: React.ReactNode;
+  children: React.ReactNode;
+}
+function Layout({left, children}: LayoutProps) {
+
+  return <div>
+    <div className={"left"}>{left}</div>
+    <div className={"right"}>{children}</div>
+  </div>
+}
+
+function PEP() {
+  return <Layout
+    left={<p>.....</p>}>
+    <main>Das ist mein Hauptbereich, auf der rechten Seite</main>
+  </Layout>
+}
+
 export default function PostEditorPage() {
   const [title, setTitle] = React.useState("");
   const [body, setBody] = React.useState("");

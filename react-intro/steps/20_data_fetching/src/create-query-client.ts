@@ -12,7 +12,7 @@ export const queryClient = new QueryClient({
       // In eurer Anwendung muesst ihr pruefen, ob die fuer euch (fachlich)
       // Sinn machen.
       refetchOnMount: true,
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
       refetchOnReconnect: false,
       // do not retry on technical problems
       retry: false
