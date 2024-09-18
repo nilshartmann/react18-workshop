@@ -1260,7 +1260,7 @@ function TagChooser({title = "Select Tag", availableTags}: TagChooserProps) {
           <ol class="xx-list">
             <li>In <code>TagChooser.tsx</code> gibt es bereits eine TagChooser-Komponente.</li>
             <li>Diese Komponente musst du um Properties erweitern</li>
-            <li>Außerdem musst du darin die übergebenen (<code>availableTags</code>) anzeigen</li>
+            <li>Außerdem musst du darin die übergebenen Tags anzeigen</li>
             <li>Du findest dazu Hinweise direkt in der Datei.</li>
 
             <li>Mögliche Lösung: <code>steps/05_props</code></li>
@@ -2192,7 +2192,7 @@ const promise = getNameAsync()
 - Vorbereitung:
   - Bitte zuerst das "Backend starten
   - Dazu im Verzeichnis `backend` ausführen: `npm install` und  `npm start`
-  - Der "Blog-Server" läuft dann unter http://localhost:3000
+  - Der "Blog-Server" läuft dann unter http://localhost:7000
 - Damit die Anwendung einfach bleibt, zeigen wir die Blog-Liste und den PostEditor gemeinsam auf einer Seite an
 - Das **Lesen der Blog-Posts** musst du in der Komponenten `PostListPage` implementieren
   - dort findest du weitere Hinweise
@@ -2413,27 +2413,34 @@ export default function App() {
 
 * Links müssen mit der [`Link`](https://reactrouter.com/docs/en/v6/components/link)-Komponente gerendert werden
 * ```javascript
+  import { Link } from "react-router-dom";
   function PostTeaser({post}) {
     return &lt;div>
       &lt;h1>{post.title}&lt;/h1>
       &lt;Link to={`/post/${post.id}`}>Read more&lt;/Link>
     &lt;/div>
   }
-```
+  ```
 * Die `Link`-Komponente rendert ein `a`-Element, verhindert aber, dass der Browser Serveraufrufe durchführt,
   wenn darauf geklickt wird
 * Das gilt nur für interne Links, externe Links wie gewohnt mit HTML `a`-Element
 * Alternative: [`NavLink`](https://reactrouter.com/docs/en/v6/components/nav-link) weiß, ob der `to`-Pfad
   der gerade aktiven Route entspricht und kann sich dann anders darstellen ("Aktiver Link", "Aktiver Tab", ...)
+  * ```css
+    .Tab--active { border: 2px solid grey; padding: 5px; }
+    .Tab--default { text-decoration: underline; }
+    ```
   * ```javascript
+    import { NavLink } from "react-router-dom";
+
     function NavBar() {
       return &lt;div>
         &lt;NavLink to={`/home}`} className={active => active ? "Tab--active":"Tab--default" }>Home&lt;/Link>
         &lt;NavLink to={`/about}`} className={active => active ? "Tab--active":"Tab--default" }>About&lt;/Link>
-        &lt;NavLink to={`/profile}`} className={active => active ? "Tab--active":"Tab--default" }>Profile&lt;/Link>
+        &lt;NavLink to={`/profile`} className={active => active ? "Tab--active":"Tab--default" }>Profile&lt;/Link>
       &lt;/div>
-    }
-```
+     }
+    ```
 * Mit `className` und `style` können Callback-Funktionen übergeben werden, die das konkrete Styling/CSS Klasse je nach Zustand
   (active bzw not-active) zurückliefern.
 
@@ -2442,7 +2449,7 @@ export default function App() {
 ### Navigation per API
 
 * Die [`Navigate`](https://reactrouter.com/docs/en/v6/components/navigate)-Komponente kann gerendert werden,
-  wenn eine Komponente beim Rendern einen Redirect machen möhcte
+  wenn eine Komponente beim Rendern einen Redirect machen möchte
 * ```javascript
   function BlogPost() {
     const result = useQuery({ /* ... */ });
@@ -2456,8 +2463,10 @@ export default function App() {
   ```
 * Mit [`useNavigate`](https://reactrouter.com/en/6.16.0/hooks/use-navigate) kann auch per API, z.B. in einem Event Handler, ein Redirect gemacht werden:
 * ```javascript
+  import { useNavigate } from "react-router-dom";
+
   function LogoutButton() {
-    const useNaviate = useNavigate();
+    const useNavigate = useNavigate();
 
     function handleClick() {
       navigate("/");
@@ -2475,6 +2484,13 @@ export default function App() {
 * Außerdem soll es ein globales "Layout" geben, das den Anwendungstitel sowie zwei Links anzeigt
 * Schreibe dafür die Router-Definition in `create-router.tsx`. Dort findest du auch weitere Informationen
 * Eine mögliche Lösung findest Du in `30_router`
+
+## ZUSATZ:
+
+- Eine Komponente anzeigen, wenn die Route nicht gefunden wird
+  - Die Komponente soll einen Link anzeigen, mit der man auf die Root-Seite zurück kommt
+- Im `Layout` die `NavLink`-Komponente verwenden, um den aktuellen Link optisch hervorzuheben
+
 
 
 
