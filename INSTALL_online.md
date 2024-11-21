@@ -13,12 +13,12 @@ Um sicherzustellen, dass der Workspace bei dir funktioniert, möchte ich dich bi
 Auf deinem Computer benötigst Du folgende Software:
 
 - Git (zum klonen und aktualisieren des Workspaces)
-- Node.js (LTS-Version, das ist zzt. Version 20.x)
+- Node.js (LTS-Version, das ist zzt. Version 22.x, 20.x sollte aber auch gehen)
 - Einen Node Package Manager (zum Beispiel npm)
 - Browser (am besten Firefox oder Chrome)
 - Eine IDE oder ein Texteditor. Wenn Du bereits einen "Lieblingseditor" verwendest, benutze diesen während des Trainings, damit Du nicht auch noch ein neues Tool lernen musst. Ansonsten funktionieren folgende Tools zum Beispiel:
   - [Visual Studio Code](https://code.visualstudio.com/)
-  - [Webstorm](https://www.jetbrains.com/webstorm/download/) (Evaluationsversion reicht)
+  - [Webstorm](https://www.jetbrains.com/webstorm/download/) (Mittlerweile kostenlos for non-commercial use, sonst Evaluationsversion)
   - [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) (Ultimate Edition, Evaluationsversion reicht aber)
 
 **Optional: Browser Erweiterungen für React**
